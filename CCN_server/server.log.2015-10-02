@@ -1,0 +1,25 @@
+2015_10_02_18_00_18_965 [main] INFO  caching.ServerLFS.connectNetwork(ServerLFS.java:477)- server started...
+2015_10_02_18_00_28_749 [Thread-2] INFO  caching.ServerLFS$A.run(ServerLFS.java:557)- advertised: 192.168.2.3
+2015_10_02_18_00_28_749 [Thread-2] INFO  caching.ServerLFS$A.run(ServerLFS.java:559)- content NOT added to content store
+2015_10_02_18_00_28_758 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_00_28_775 [main] INFO  topology.SendPacket.forwardPacket(SendPacket.java:198)- -------------------------------------------
+2015_10_02_18_00_28_776 [main] INFO  topology.SendPacket.forwardPacket(SendPacket.java:199)-     -Forward packet next hop provided-
+2015_10_02_18_00_28_776 [main] INFO  topology.SendPacket.forwardPacket(SendPacket.java:200)- nextHop: 196501053
+2015_10_02_18_00_28_776 [main] INFO  topology.SendPacket.forwardPacket(SendPacket.java:201)- -------------------------------------------
+2015_10_02_18_00_28_776 [main] INFO  caching.ServerLFS.sendMessage(ServerLFS.java:143)- IP: 
+2015_10_02_18_00_28_777 [main] INFO  caching.ServerLFS.sendMessage(ServerLFS.java:144)- isConnected: {=overlay.SocketContainer@3b95a09c}
+2015_10_02_18_00_38_761 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_00_48_765 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_00_58_772 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_01_08_776 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_01_18_778 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_01_28_783 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_01_38_790 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_01_48_794 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_01_58_800 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_02_08_805 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_02_18_811 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_02_28_817 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_02_38_829 [Thread-3] INFO  caching.ServerLFS$1.sendtoVisualizeServer(ServerLFS.java:464)- message sent
+2015_10_02_18_02_42_264 [Thread-4] ERROR overlay.ServerLinks.run(ServerLinks.java:46)- 
+2015_10_02_18_02_42_265 [Thread-4] INFO  overlay.ServerLinks.run(ServerLinks.java:57)- Server dropped...
