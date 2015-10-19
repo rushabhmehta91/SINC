@@ -11,6 +11,9 @@ local.properties
 .settings/
 .loadpath
 
+#jars
+jar/
+
 # Eclipse Core
 .project
 
@@ -42,9 +45,9 @@ CCN_server/.classpath
 
 #ds store
 .DS_Store
-CCN_client/.DS_Store
-CCN_server/.DS_Store
-CCN_cacheServer/.DS_Store
+SINC_client/.DS_Store
+SINC_server/.DS_Store
+SINC_cacheServer/.DS_Store
 
 #maven
 target/

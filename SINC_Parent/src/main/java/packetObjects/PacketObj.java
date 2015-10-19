@@ -15,7 +15,7 @@ package packetObjects;
  */
 public class PacketObj {
 
-	String packet; 
+	Object packet; 
 	String recievedFromNode;
 	boolean directlyConnectedUpdate;
 
@@ -25,7 +25,7 @@ public class PacketObj {
 	 * @param recievedFromNode
 	 * @param directlyConnectedUpdate
 	 */
-	public PacketObj(String packet, String recievedFromNode, boolean directlyConnectedUpdate){
+	public PacketObj(Object packet, String recievedFromNode, boolean directlyConnectedUpdate){
 		this.packet = packet;
 		this.recievedFromNode = recievedFromNode;
 		this.directlyConnectedUpdate = directlyConnectedUpdate;
@@ -35,7 +35,7 @@ public class PacketObj {
 	 * Get the packet
 	 * @return
 	 */
-	public String getPacket() {
+	public Object getPacket() {
 		return packet;
 	}
 
@@ -43,7 +43,7 @@ public class PacketObj {
 	 * Set the packet
 	 * @param packet
 	 */
-	public void setPacket(String packet) {
+	public void setPacket(Object packet) {
 		this.packet = packet;
 	}
 

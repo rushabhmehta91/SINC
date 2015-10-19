@@ -1,9 +1,0 @@
-2015_10_18_14_31_39_068 [main] INFO  overlay.Server.connectNetwork(Server.java:459)- server started...
-2015_10_18_14_31_42_457 [Thread-2] INFO  overlay.Server$A.run(Server.java:579)- advertised: 129.21.72.210
-2015_10_18_14_31_42_457 [Thread-2] INFO  overlay.Server$A.run(Server.java:581)- content NOT added to content store
-2015_10_18_14_31_45_810 [main] INFO  topology.ServerSendPacket.forwardPacket(ServerSendPacket.java:106)- -------------------------------------------
-2015_10_18_14_31_45_810 [main] INFO  topology.ServerSendPacket.forwardPacket(ServerSendPacket.java:107)-     -Forward packet next hop provided-
-2015_10_18_14_31_45_811 [main] INFO  topology.ServerSendPacket.forwardPacket(ServerSendPacket.java:108)- nextHop: 316357233
-2015_10_18_14_31_45_811 [main] INFO  topology.ServerSendPacket.forwardPacket(ServerSendPacket.java:109)- -------------------------------------------
-2015_10_18_14_31_45_811 [main] INFO  overlay.Server.sendMessage(Server.java:148)- IP: 
-2015_10_18_14_31_45_811 [main] INFO  overlay.Server.sendMessage(Server.java:149)- isConnected: {=overlay.SocketContainer@6bf2d08e}

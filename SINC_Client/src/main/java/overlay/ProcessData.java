@@ -44,6 +44,12 @@ public class ProcessData extends Thread {
 		String contentName = null;
 		if (dataObj != null) {
 			contentName = dataObj.getContentName();
+			try {
+				System.out.println("hi :)" + dataObj.getData().getClass());
+				System.out.println(dataObj.getData().toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		//used for rtt, can be removed

@@ -1,5 +1,6 @@
 package packetObjects;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
@@ -26,15 +27,17 @@ import org.apache.log4j.Logger;
  * @author spufflez
  *
  */
-public class DataObj {
+public class DataObj implements Serializable{
 
 	String contentName;
 	String originRouter;
 	byte flag;
-	String data;
-	String originalPacket;
+	Object data;
+	Object originalPacket;
 	byte cacheFlag;
 	boolean lastChunk;
+	String type = "route";
+	String action = "data";
 	private static Logger logger = LogManager.getLogger(DataObj.class);
 
 	/**
@@ -48,7 +51,7 @@ public class DataObj {
 	 * @param lastChunk
 	 */
 	public DataObj(String contentName, String originRouter, 
-			byte flag, String data, String originalPacket, 
+			byte flag, String data, Object originalPacket, 
 			byte cacheFlag, boolean lastChunk){
 
 		this.contentName = contentName;
@@ -75,7 +78,7 @@ public class DataObj {
 	 * @param cacheFlag
 	 * @param lastChunk
 	 */
-	public DataObj(String contentName, String originRouter, byte flag, String data, byte cacheFlag, boolean lastChunk){
+	public DataObj(String contentName, String originRouter, byte flag, Object data, byte cacheFlag, boolean lastChunk){
 		this.contentName = contentName;
 		this.originRouter = originRouter;
 		if(flag > 2){
@@ -184,7 +187,7 @@ public class DataObj {
 	 * get the data string
 	 * @return data string
 	 */
-	public String getData(){
+	public Object getData(){
 		return data;
 	}
 
@@ -192,7 +195,7 @@ public class DataObj {
 	 * gets the json representation of the object 
 	 * @return original packet string
 	 */
-	public String getOriginalPacket(){
+	public Object getOriginalPacket(){
 		return originalPacket;
 	}
 
@@ -200,7 +203,7 @@ public class DataObj {
 	 * set the original packet to a json string
 	 * @param originalPacket
 	 */
-	public void setOriginalPacket(String originalPacket){
+	public void setOriginalPacket(Object originalPacket){
 		this.originalPacket = originalPacket;
 	}
 
@@ -208,9 +211,9 @@ public class DataObj {
 	 * converts the data string to a byte array 
 	 * @return byte[] of the data string
 	 */
-	public byte[] getDataBytes(){
-		return convertToByteArray(data);
-	}
+//	public byte[] getDataBytes(){
+//		return convertToByteArray(data);
+//	}
 
 	/**
 	 * converts UTF-8 byte array to a string
@@ -270,6 +273,13 @@ public class DataObj {
 	 */
 	public boolean getLastChunk(){
 		return lastChunk;
+	}
+	public String getType() {
+	    return type;
+	}
+	
+	public String getAction() {
+	    return action;
 	}
 
 

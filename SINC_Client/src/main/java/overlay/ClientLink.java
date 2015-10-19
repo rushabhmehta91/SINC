@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import packetObjects.DataObj;
 import packetObjects.PacketObj;
 import topology.ClientSendPacket;
 
@@ -70,9 +71,11 @@ public class ClientLink extends Link {
 	public void handleUpdate(Message m) throws IOException,
 			ClassNotFoundException, InterruptedException {
 		if (m.type == 7) {
-			Message<String> m2 = m;
+			Message<Object> m2 = m;
 			PacketObj pObj = new PacketObj(m2.packet, "", true);
 			Client.pq2.addToGeneralQueue(pObj);
+			DataObj d = (DataObj) pObj.getPacket();
+			System.out.println(d.getData().getClass());
 		}
 	}
 }

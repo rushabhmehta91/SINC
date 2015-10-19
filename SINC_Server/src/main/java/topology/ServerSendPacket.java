@@ -99,10 +99,10 @@ public class ServerSendPacket extends SendPacket {
 	 * Send a packet to the cache server
 	 * @param packet
 	 */
-	public void forwardPacket(String packet, String nextHop) {
+	public void forwardPacket(Object packet, String nextHop) {
 
 		// this will forward a packet to only the router specified
-		Message<String> packetMessage = new Message<String>(7, packet);
+		Message<Object> packetMessage = new Message<Object>(7, packet);
 		logger.info("-------------------------------------------");
 		logger.info("    -Forward packet next hop provided-");
 		logger.info("nextHop: " + nextHop);

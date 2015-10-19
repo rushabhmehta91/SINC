@@ -43,7 +43,6 @@ public class Client {
 		sendPacketObj = new ClientSendPacket();
 		boolean clientStarted = true;
 		boolean connected = false;
-
 		// used for rtt, can be removed
 		rtt = new ConcurrentHashMap<String, Long>();
 
@@ -89,12 +88,15 @@ public class Client {
 
 					System.out.print("Enter cache server to connect to: ");
 					cacheServerAddress = s.nextLine();
+					System.out.println("crating socket");
 					Socket cacheServer = new Socket(cacheServerAddress, 43125);
+					System.out.println("crating socket");
 					ois = new ObjectInputStream(cacheServer.getInputStream());
 					oos = new ObjectOutputStream(cacheServer.getOutputStream());
 					Message<JoinPacket> joinMessage = new Message<JoinPacket>(11); // handle
 					// in
 					// Peer
+					System.out.println("hiiii");
 					oos.writeObject(joinMessage);
 					link = new ClientLink(cacheServerAddress, ois,1);
 					link.start();

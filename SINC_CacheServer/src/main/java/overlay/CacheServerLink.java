@@ -188,7 +188,7 @@ public class CacheServerLink extends Link {
 			Peer.allNodes.add(m.packet.toString());
 		} else if (m.type == 7) {
 			try {
-				Message<String> m2 = m;
+				Message<Object> m2 = m;
 				Peer.routing.addPacket(m2.packet, ID, false);
 			} catch (Exception e) {
 				logger.error(e.getStackTrace());

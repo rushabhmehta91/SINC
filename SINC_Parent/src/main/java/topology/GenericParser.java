@@ -25,6 +25,7 @@ public class GenericParser {
 	Gson gson = new Gson();
 	Parse2 parse;
 	PacketQueue2 packetQueue2;
+	boolean isJson = true;
 	private static Logger logger = LogManager.getLogger(GenericParser.class);
 
 	/**
@@ -50,18 +51,22 @@ public class GenericParser {
 		JsonObject jsonObject = new JsonObject();
 		try{
 
-			jsonObject = gson.fromJson(packetObj.getPacket(), JsonObject.class);
+			jsonObject = gson.fromJson((String)packetObj.getPacket(), JsonObject.class);
 			JsonElement jsonTypeElement = jsonObject.get("type");
 			type = jsonTypeElement.getAsString();
 
 		}catch(Exception e){
 			type = "dropPacket";
+			DataObj dataObj = (DataObj) packetObj.getPacket();
+			type = dataObj.getType();
+			jsonObject = null;
+			isJson = false;
 		}
 
 		switch (type){
 
 		case "route" :
-			parseRoutePacket(jsonObject, packetObj);
+			parseRoutePacket(jsonObject, packetObj, isJson);
 			break;
 
 		default :
@@ -78,9 +83,19 @@ public class GenericParser {
 	 * @param jsonObject
 	 * @param packetObj
 	 */
-	public void parseRoutePacket(JsonObject jsonObject, PacketObj packetObj){
-		JsonElement jsonTypeElement = jsonObject.get("action");
-		String action = jsonTypeElement.getAsString();
+	public void parseRoutePacket(JsonObject jsonObject, PacketObj packetObj, boolean isJson){
+		JsonElement jsonTypeElement;
+		String action = null;
+		DataObj dataObj = null;
+		
+		if ( isJson ) {
+		    jsonTypeElement = jsonObject.get("action");
+		    action = jsonTypeElement.getAsString();
+		} else {
+		    dataObj = (DataObj) packetObj.getPacket();
+		    action = dataObj.getAction();
+		}
+
 		logger.info("Routing action::" + action);
 		System.out.println("Routing action::" + action);
 		switch(action){
@@ -88,7 +103,7 @@ public class GenericParser {
 		case "intrest" :
 			try{
 
-				IntrestObj intrestObj = parse.parseIntrestJson(jsonObject, packetObj.getPacket());
+				IntrestObj intrestObj = parse.parseIntrestJson(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<IntrestObj> gpoIntrest = new GenericPacketObj<>(action, packetObj.getRecievedFromNode(), intrestObj);
 				//add it to the Update Queue
 				packetQueue2.addToRoutingQueue(gpoIntrest);
@@ -101,13 +116,20 @@ public class GenericParser {
 
 		case "data" :
 			try{
+			    if ( isJson ) {
+			    	  jsonTypeElement = jsonObject.get("action");
+	    				dataObj = parse.parseDataJson(jsonObject, (String) packetObj.getPacket());
+	    				GenericPacketObj<DataObj> gpoData= new GenericPacketObj<DataObj>(action, packetObj.getRecievedFromNode(), dataObj);
+	    				//add it to the Update Queue
+	    				packetQueue2.addToRoutingQueue(gpoData);
+	    				logger.info("generic parser added data OBJ to routing queue");
+	    				System.out.println("generic parser added data OBJ to routing queue");
+				    } else {
+				        dataObj = (DataObj) packetObj.getPacket();
+			            GenericPacketObj<DataObj> gpoData= new GenericPacketObj<DataObj>(action, packetObj.getRecievedFromNode(), dataObj);
 
-				DataObj dataObj = parse.parseDataJson(jsonObject, packetObj.getPacket());
-				GenericPacketObj<DataObj> gpoData= new GenericPacketObj<DataObj>(action, packetObj.getRecievedFromNode(), dataObj);
-				//add it to the Update Queue
-				packetQueue2.addToRoutingQueue(gpoData);
-				logger.info("generic parser added data OBJ to routing queue");
-				System.out.println("generic parser added data OBJ to routing queue");
+		            packetQueue2.addToRoutingQueue(gpoData);
+			    }
 			}catch(Exception e){
 				logger.error(e.getMessage());
 				System.out.println(e);

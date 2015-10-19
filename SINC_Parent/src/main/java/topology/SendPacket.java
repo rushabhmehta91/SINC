@@ -88,7 +88,7 @@ public class SendPacket {
 	 * @param dataObj
 	 */
 	public void createDataPacket(DataObj dataObj){
-		JsonObject packet = new JsonObject();
+		/*JsonObject packet = new JsonObject();
 
 		packet.addProperty("type", "route");
 		packet.addProperty("action", "data");
@@ -99,7 +99,7 @@ public class SendPacket {
 		packet.addProperty("cacheFlag", dataObj.getCacheFlag());
 		packet.addProperty("lastChunk", dataObj.getLastChunk());
 
-		dataObj.setOriginalPacket(packet.toString());
+		dataObj.setOriginalPacket(packet.toString());*/
 
 	}
 

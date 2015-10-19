@@ -34,7 +34,7 @@ public class PassToRoutingLayer {
 	 * @param fromNode
 	 * @param directlyConnectedUpdate
 	 */
-	public void addPacket(String routingPacket, String fromNode, boolean directlyConnectedUpdate){
+	public void addPacket(Object routingPacket, String fromNode, boolean directlyConnectedUpdate){
 
 		PacketObj packetObj = new PacketObj(routingPacket, fromNode, directlyConnectedUpdate);
 		packetQueue2.addToGeneralQueue(packetObj);

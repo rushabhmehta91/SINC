@@ -217,7 +217,7 @@ public class CacheServerSendPacket extends SendPacket{
 		packet.addProperty("flag", dataObj.getFlag());
 		packet.addProperty("contentName", dataObj.getContentName());
 		packet.addProperty("originRouter", dataObj.getOriginRouterName());
-		packet.addProperty("data", dataObj.getData());
+		packet.addProperty("data", (String)dataObj.getData());
 
 		dataObj.setOriginalPacket(packet.toString());
 	}
@@ -242,7 +242,7 @@ public class CacheServerSendPacket extends SendPacket{
 		packet.addProperty("flag", dataObj.getFlag());
 		packet.addProperty("contentName", dataObj.getContentName());
 		packet.addProperty("originRouter", dataObj.getOriginRouterName());
-		packet.addProperty("data", dataObj.getData());
+		packet.addProperty("data",(String) dataObj.getData());
 
 		dataObj.setOriginalPacket(packet.toString());
 	}
@@ -322,10 +322,10 @@ public class CacheServerSendPacket extends SendPacket{
 	 * @param packet
 	 * @param nextHop
 	 */
-	public void forwardPacket(String packet, String nextHop){
+	public void forwardPacket(Object packet, String nextHop){
 
 		// this will forward a packet to only the router specified
-		Message<String> packetMessage = new Message<String>(7, packet);
+		Message<Object> packetMessage = new Message<Object>(7, packet);
 		
 		Peer.sendMessage(nextHop, packetMessage);
 		System.out.println("-------------------------------------------");

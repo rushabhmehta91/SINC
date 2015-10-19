@@ -206,7 +206,7 @@ public class ProcessRoutingPackets {
 			//0
 			//check the cs flag
 			if (dataObj != null && dataObj.getCacheFlag() == 2) {
-				String content = dataObj.getData();
+				String content = (String) dataObj.getData();
 				logger.info(content);
 				System.out.println(content);
 				ContentStore.incomingContent(content, recievedFromNode);

@@ -151,6 +151,10 @@ public class PrefixListObj {
 	public void setOriginalPacket(String originalPacket) {
 		this.originalPacket = originalPacket;
 	}
-
+	
+	public void displayPrefixList() {
+		for ( String s : prefixList )
+			System.out.println(s);
+	}
 
 }

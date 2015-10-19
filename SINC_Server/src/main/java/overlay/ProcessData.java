@@ -40,7 +40,7 @@ public class ProcessData extends Thread {
 	}
 
 	public void processDataObj(DataObj dataObj) {
-		String content = null;
+		Object content = null;
 		byte cacheFlag = dataObj.getCacheFlag();
 		if (dataObj != null && cacheFlag == 2) {
 			content = dataObj.getData();

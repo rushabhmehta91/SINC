@@ -172,7 +172,7 @@ public class RoutingSwitch implements Runnable{
 
 						//the packet is for this node
 						Gson gson = new Gson();
-						JsonObject jsonObject = gson.fromJson(dataObj.getData(), JsonObject.class);
+						JsonObject jsonObject = gson.fromJson((String)dataObj.getData(), JsonObject.class);
 						JsonElement jsonActionElement = jsonObject.get("action");
 						String nestedAction = jsonActionElement.getAsString();
 						CacheServerSendPacket sendPacket = new CacheServerSendPacket();
@@ -236,9 +236,9 @@ public class RoutingSwitch implements Runnable{
 					}//ends if else for ping/neighbors-prefixes
 					//break;
 				}//ends if length grater then 2
-				break;
+				
 			}
-
+			break;
 		default : 
 			logger.error("Invalid route action");
 			System.out.println("Invalid route action");

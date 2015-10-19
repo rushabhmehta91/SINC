@@ -1,5 +1,6 @@
 package topology;
 
+import packetObjects.DataObj;
 import packetObjects.GenericPacketObj;
 import packetObjects.LinkObj;
 import packetObjects.ModifyNodeObj;
@@ -42,12 +43,18 @@ public class CacheServerGenericParser extends GenericParser {
 		JsonObject jsonObject = new JsonObject();
 		try{
 
-			jsonObject = gson.fromJson(packetObj.getPacket(), JsonObject.class);
+			jsonObject = gson.fromJson((String)packetObj.getPacket(), JsonObject.class);
 			JsonElement jsonTypeElement = jsonObject.get("type");
 			type = jsonTypeElement.getAsString();
 
 		}catch(Exception e){
 			type = "dropPacket";
+			DataObj dataObj = (DataObj) packetObj.getPacket();
+			type = dataObj.getType();
+			System.out.println("Satyajeet: " + dataObj.getData().getClass());
+
+			jsonObject = null;
+			isJson = false;
 		}
 
 		switch (type){
@@ -56,7 +63,7 @@ public class CacheServerGenericParser extends GenericParser {
 			parseUpdatePacket(jsonObject, packetObj);
 			break;
 		case "route" :
-			parseRoutePacket(jsonObject, packetObj);
+			parseRoutePacket(jsonObject, packetObj, isJson);
 			break;
 
 		default :
@@ -127,7 +134,7 @@ public class CacheServerGenericParser extends GenericParser {
 		case "modifyLink" :
 			try{
 
-				linkObj = parse.parseModifyLink(jsonObject, packetObj.getPacket());
+				linkObj = parse.parseModifyLink(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<LinkObj> gpoModifyLink = new GenericPacketObj<LinkObj>(action, packetObj.getRecievedFromNode(), linkObj);
 				//add it to the Update Queue
 				packetQueue2.addToUpdateQueue(gpoModifyLink);
@@ -140,7 +147,7 @@ public class CacheServerGenericParser extends GenericParser {
 		case "modify" : 
 			try{
 
-				modifyNodeObj = parse.parseModifyNodeJson(jsonObject, packetObj.getPacket());
+				modifyNodeObj = parse.parseModifyNodeJson(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<ModifyNodeObj> gpoModifyNodeObj = new GenericPacketObj<ModifyNodeObj>(action, packetObj.getRecievedFromNode(), modifyNodeObj);
 				//add it to the Update Queue
 				packetQueue2.addToUpdateQueue(gpoModifyNodeObj);
@@ -154,7 +161,7 @@ public class CacheServerGenericParser extends GenericParser {
 
 			try{
 
-				prefixObj = parse.parsePrefixJson(jsonObject, packetObj.getPacket());
+				prefixObj = parse.parsePrefixJson(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<PrefixObj> gpoPrefixObj = new GenericPacketObj<PrefixObj>(action, packetObj.getRecievedFromNode(), prefixObj);
 				//add it to the Update Queue
 				packetQueue2.addToUpdateQueue(gpoPrefixObj);
@@ -207,7 +214,7 @@ public class CacheServerGenericParser extends GenericParser {
 		case "clientPrefix" : 
 			try{
 
-				prefixObj = parse.parsePrefixJson(jsonObject, packetObj.getPacket());
+				prefixObj = parse.parsePrefixJson(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<PrefixObj> gpoClientPrefix = new GenericPacketObj<PrefixObj>(action, packetObj.getRecievedFromNode(), prefixObj);
 				//add it to the Update Queue
 				packetQueue2.addToUpdateQueue(gpoClientPrefix);
@@ -259,7 +266,7 @@ public class CacheServerGenericParser extends GenericParser {
 		case "neighborResponse" :
 			try{
 
-				modifyNodeObj = parse.parseModifyNodeJson(jsonObject, packetObj.getPacket());
+				modifyNodeObj = parse.parseModifyNodeJson(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<ModifyNodeObj> gpoNeighborResponse = new GenericPacketObj<ModifyNodeObj>(action, packetObj.getRecievedFromNode(), modifyNodeObj);
 				//add it to the Update Queue
 				packetQueue2.addToUpdateQueue(gpoNeighborResponse);

@@ -16,6 +16,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +48,10 @@ public class Server implements Serializable {
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
 	static String cacheServerAddress = "";
-	static NodeDetails nDetails=null;
+	static NodeDetails nDetails = null;
 	// socket to communicate with vizualizeServer
 	static Socket vizualizeServerSocket;
-	static String vizualizeServer=null;
+	static String vizualizeServer = null;
 	private static Logger logger = LogManager.getLogger(Server.class);
 
 	static {
@@ -102,7 +103,7 @@ public class Server implements Serializable {
 			}
 		}
 		// System.out.println("ID: " + ID);
-		 idIPMap.put(ID + "", hostAddress);
+		idIPMap.put(ID + "", hostAddress);
 
 		return ID;
 	}
@@ -201,24 +202,18 @@ public class Server implements Serializable {
 	}
 
 	public static Content serveRequest(String fileName) {
-		// String fileName = packet2.getContentName();
-		// Integer interfaceId=packet2;
-		if (store.containsKey(fileName)) {
+		Content c;
+		System.out.println("Serving request:" + fileName);
+		if (storeList.contains(fileName)) {
 			logger.info("Request content found!!!!!");
 			System.out.println("Request content found!!!!!");
-			return store.get(fileName);
-			// sendData(store.get(fileName));
-			// try {
-			// //place content returned
-			// Content sendingData = updateScoreOnIterface(store.get(fileName),
-			// interfaceId); //packet type : 2 = incoming packet
-			// if (sendingData != null) {
-			// sendData(sendingData);
-			// }
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
-			//
+			// return store.get(fileName);
+
+			// put file object in content and return it.
+			File f = new File("cache/" + fileName);
+			c = new Content("test.txt", new ArrayList<String>(), 200, f);
+			return c;
+
 		} else {
 			logger.warn("Request content not found on server. sending 404");
 			System.out.println("Request content not found on server. sending 404");
@@ -238,10 +233,10 @@ public class Server implements Serializable {
 			copyFlagValue = (byte) 1;
 		}
 		// System.out.println(convertContentToString(sendingContent));
-		DataObj dataObj = new DataObj(sendingContent.getContentName(), originRouter, (byte) 0,
-				convertContentToString(sendingContent), copyFlagValue, true);
-		sendPacketObj.createDataPacket(dataObj);
-		sendPacketObj.forwardPacket(dataObj.getOriginalPacket(), receivedFromNode);
+		DataObj dataObj = new DataObj(sendingContent.getContentName(), originRouter, (byte) 0, sendingContent.getContentCache(), copyFlagValue, true);
+//		sendPacketObj.createDataPacket(dataObj);
+		
+		sendPacketObj.forwardPacket(dataObj, receivedFromNode);
 	}
 
 	/**
@@ -316,9 +311,9 @@ public class Server implements Serializable {
 	 * @param packet
 	 * @return
 	 */
-	public static boolean incomingContent(String packet) {
+	 public static boolean incomingContent(Object packet) {
 
-		Content receivedContent = convertStringToContent(packet);
+	        Content receivedContent = (Content) packet;
 		if (receivedContent.getSizeInBytes() <= r.freeMemory()) {
 			return place(receivedContent);
 		} else {
@@ -374,23 +369,43 @@ public class Server implements Serializable {
 	//
 	// }
 
-	private static void fillStore() {
-		Content c1 = new Content("firstContent", new ArrayList<String>(), 200, "updatedSecondContent1");
-		Content c2 = new Content("secondContent", new ArrayList<String>(), 200, "updatedSecondContent2");
-		Content c3 = new Content("thirdContent", new ArrayList<String>(), 200, "updatedSecondContent3");
-		Content c4 = new Content("forthContent", new ArrayList<String>(), 200, "updatedSecondContent4");
-		Content c5 = new Content("test", new ArrayList<String>(), 200, "updatedSecondContent5");
-		storeList.add(c1.getContentName());
-		storeList.add(c2.getContentName());
-		storeList.add(c3.getContentName());
-		storeList.add(c4.getContentName());
-		storeList.add(c5.getContentName());
-		store.put(c1.getContentName(), c1);
-		store.put(c2.getContentName(), c2);
-		store.put(c3.getContentName(), c3);
-		store.put(c4.getContentName(), c4);
-		store.put(c5.getContentName(), c5);
-	}
+	 static String getContentAsString(String fileName) {
+	    	String dataString = "";
+	    	
+	    	try {
+	    		byte[] data = new byte[1024];
+
+	    		File file = new File(fileName);
+				FileInputStream fis = new FileInputStream(fileName);
+				BufferedInputStream bis = new BufferedInputStream(fis);
+
+				while ( bis.available() > 0 ) {
+					bis.read(data, 0, data.length);
+					dataString += new String(data, Charset.forName("UTF-8"));
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	    	return dataString;
+	    }
+
+		private static void fillStore() {
+//			String contentName;
+//			File files = new File("cache");
+//			String[] filesList = files.list();
+//			for ( String s : filesList ) {
+//				contentName = "cache/" + s;
+//				System.out.println("Adding: " + contentName);
+//				storeList.add(contentName);			
+//			}
+			String contentName = "test.txt";
+			System.out.println("Adding: " + contentName);
+	        storeList.add(contentName);
+
+		}
 
 	private static void advertise(ArrayList<String> contentList, String cacheServerAddress)
 			throws UnknownHostException {
@@ -398,6 +413,8 @@ public class Server implements Serializable {
 		PrefixListObj list = new PrefixListObj(contentList, generateID(getIP(serverNameID)) + "", true,
 				generateID(getIP(serverNameID)) + System.nanoTime() + "");
 		// sendPacketObj.createPrefixListPacket(list);
+		System.out.println("Advertising prefix List: ");
+		list.displayPrefixList();
 		sendPacketObj.createClientPrefixList(list);
 		sendPacketObj.forwardPacket(list.getOriginalPacket(), cacheServerAddress);
 
@@ -423,7 +440,7 @@ public class Server implements Serializable {
 		pd.start();
 
 		A a = new A();
-		//a.start();
+		// a.start();
 		// connection to visualize server
 		Thread B = new Thread(new Runnable() {
 			boolean alive = true;
@@ -432,11 +449,11 @@ public class Server implements Serializable {
 			public void run() {
 				// TODO Auto-generated method stub
 				while (alive) {
-					String currentNeigh=cacheServerAddress;
-					String oldNeigh=nDetails.getNeighbours();
-					if(!currentNeigh.equals(oldNeigh)){
+					String currentNeigh = cacheServerAddress;
+					String oldNeigh = nDetails.getNeighbours();
+					if (!currentNeigh.equals(oldNeigh)) {
 						nDetails.setNeighbours(currentNeigh);
-						sendtoVisualizeServer();	
+						sendtoVisualizeServer();
 					}
 					try {
 						Thread.sleep(10000);
@@ -446,19 +463,18 @@ public class Server implements Serializable {
 				}
 			}
 
-			
 		});
-		if(nDetails==null){
-			nDetails=new NodeDetails(ID,idIPMap.get(ID),cacheServerAddress,1);
+		if (nDetails == null) {
+			nDetails = new NodeDetails(ID, idIPMap.get(ID), cacheServerAddress, 1);
 		}
-		
+
 		B.start();
 		while (serverStarted) {
 			while (!connected) {
 				try {
 					logger.info("server started...");
 					System.out.println("server started...");
-					
+
 					if (csIP == null) {
 						System.out.print("Enter cache server to connect to: ");
 						cacheServerAddress = sc.nextLine();
@@ -485,13 +501,13 @@ public class Server implements Serializable {
 
 					ServerLink link = null;
 					try {
-						link = new ServerLink(cacheServerAddress, ois,2);
+						link = new ServerLink(cacheServerAddress, ois, 2);
 						link.start();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 					ID = generateID(getIP(cacheServerAddress)) + "";
 					connected = true;
 					// oos.writeObject("joining client");
@@ -503,24 +519,24 @@ public class Server implements Serializable {
 					logger.error("Connection error.. Please try again.." + e.getMessage());
 					System.out.println("Connection error.. Please try again..");
 				}
-				
+
 			}
 		}
 	}
+
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
 			String defaultVS = "172.31.38.100";
-			System.out.println(
-					"Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
-//			Scanner sc = new Scanner(System.in);
-//			String reply = sc.nextLine();
+			System.out.println("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
+			// Scanner sc = new Scanner(System.in);
+			// String reply = sc.nextLine();
 			String reply = "y";
 			if (reply.compareToIgnoreCase("y") == 0 || reply.compareToIgnoreCase("yes") == 0) {
 				vizualizeServer = defaultVS;
 			} else {
 				vizualizeServer = reply;
 			}
-//			sc.close();
+			// sc.close();
 		}
 		try {
 			vizualizeServerSocket = new Socket(vizualizeServer, 56732);
@@ -537,6 +553,7 @@ public class Server implements Serializable {
 		}
 
 	}
+
 	private static void advertiseNewlyAdded(Content content) throws UnknownHostException {
 		// write code to advertize single prefixObj
 		PrefixObj list = new PrefixObj(content.getContentName(),
@@ -569,7 +586,7 @@ public class Server implements Serializable {
 		public void run() {
 			Scanner s = new Scanner(System.in);
 			while (true) {
-				//System.out.print("Enter prefix to be advertised: ");
+				// System.out.print("Enter prefix to be advertised: ");
 				String str = s.nextLine();
 				try {
 					advertiseNewlyAdded(new Content(str, null, 0, null));
