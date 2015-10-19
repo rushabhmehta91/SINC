@@ -401,6 +401,22 @@ public class Server implements Serializable {
 //				System.out.println("Adding: " + contentName);
 //				storeList.add(contentName);			
 //			}
+			
+			Content c1 = new Content("firstContent", new ArrayList<String>(), 200, "updatedSecondContent1");
+			Content c2 = new Content("secondContent", new ArrayList<String>(), 200, "updatedSecondContent2");
+			Content c3 = new Content("thirdContent", new ArrayList<String>(), 200, "updatedSecondContent3");
+			Content c4 = new Content("forthContent", new ArrayList<String>(), 200, "updatedSecondContent4");
+			Content c5 = new Content("test", new ArrayList<String>(), 200, "updatedSecondContent5");
+			storeList.add(c1.getContentName());
+			storeList.add(c2.getContentName());
+			storeList.add(c3.getContentName());
+			storeList.add(c4.getContentName());
+			storeList.add(c5.getContentName());
+			store.put(c1.getContentName(), c1);
+			store.put(c2.getContentName(), c2);
+			store.put(c3.getContentName(), c3);
+			store.put(c4.getContentName(), c4);
+			store.put(c5.getContentName(), c5);
 			String contentName = "test.txt";
 			System.out.println("Adding: " + contentName);
 	        storeList.add(contentName);

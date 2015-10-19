@@ -88,7 +88,6 @@ public class Client {
 
 					System.out.print("Enter cache server to connect to: ");
 					cacheServerAddress = s.nextLine();
-					System.out.println("crating socket");
 					Socket cacheServer = new Socket(cacheServerAddress, 43125);
 					System.out.println("crating socket");
 					ois = new ObjectInputStream(cacheServer.getInputStream());
