@@ -66,7 +66,7 @@ public class Listen extends Thread {
 				// code 400 for server join
 				if (m.type == 11 || m.type == 400) {
 					// start listening on new link with new joinee
-					Link link = new Link(
+					CacheServerLink link = new CacheServerLink(
 							Peer.peerSocket.getRemoteSocketAddress() + "", ois,
 							m.type == 11 ? 1 : 2);
 					link.start();
@@ -84,7 +84,7 @@ public class Listen extends Thread {
 				// else cache server join
 				else {
 					// start listening on new link with new joinee
-					Link link = new Link(
+					CacheServerLink link = new CacheServerLink(
 							Peer.peerSocket.getRemoteSocketAddress() + "", ois,
 							3);
 					link.start();

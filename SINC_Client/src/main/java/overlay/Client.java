@@ -3,7 +3,7 @@ package overlay;
 import packetObjects.IntrestObj;
 import topology.GeneralQueueHandler;
 import topology.PacketQueue2;
-import topology.SendPacket;
+import topology.ClientSendPacket;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,8 +21,8 @@ import org.apache.log4j.Logger;
 public class Client {
 	static ObjectInputStream ois;
 	static ObjectOutputStream oos;
-	static Link link;
-	static SendPacket sendPacketObj;
+	static ClientLink link;
+	static ClientSendPacket sendPacketObj;
 	static String ID;
 	static String name;
 	static String cacheServerAddress="";
@@ -40,7 +40,7 @@ public class Client {
 
 	public static void main(String[] args) throws IOException {
 		Scanner s = new Scanner(System.in);
-		sendPacketObj = new SendPacket();
+		sendPacketObj = new ClientSendPacket();
 		boolean clientStarted = true;
 		boolean connected = false;
 
@@ -80,8 +80,9 @@ public class Client {
 		});
 		
 		if(nDetails==null){
-			nDetails=new NodeDetails(ID,idIPMap.get(ID),cacheServerAddress);
+			nDetails=new NodeDetails(ID,idIPMap.get(ID),cacheServerAddress,3);
 		}
+		a.start();
 		while (clientStarted) {
 			while (!connected) {
 				try {
@@ -95,7 +96,7 @@ public class Client {
 					// in
 					// Peer
 					oos.writeObject(joinMessage);
-					link = new Link(cacheServerAddress, ois);
+					link = new ClientLink(cacheServerAddress, ois,1);
 					link.start();
 					ID = generateID(getIP(cacheServerAddress)) + "";
 					connected = true;
@@ -106,7 +107,7 @@ public class Client {
 				}
 			}
 			
-			a.start();
+			
 			System.out.println("Enter content to be fetched(EXIT to exit): ");
 			String msg = s.nextLine();
 			IntrestObj intrst = new IntrestObj(msg, "", 1);
@@ -120,17 +121,18 @@ public class Client {
 			String defaultVS = "172.31.38.100";
 			System.out.println(
 					"Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
-			Scanner sc = new Scanner(System.in);
-			String reply = sc.nextLine();
+			//Scanner sc = new Scanner(System.in);
+			//String reply = sc.nextLine();
+			String reply = "y";
 			if (reply.compareToIgnoreCase("y") == 0 || reply.compareToIgnoreCase("yes") == 0) {
 				vizualizeServer = defaultVS;
 			} else {
 				vizualizeServer = reply;
 			}
-			sc.close();
+//			sc.close();
 		}
 		try {
-			vizualizeServerSocket = new Socket(vizualizeServer, 43125);
+			vizualizeServerSocket = new Socket(vizualizeServer, 56732);
 			VisualizeMessage message = new VisualizeMessage(ID,1,3,nDetails); 
 
 			ObjectOutputStream oos = new ObjectOutputStream(vizualizeServerSocket.getOutputStream());

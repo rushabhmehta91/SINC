@@ -23,7 +23,7 @@ public class ProcessUpdates {
 
 	NodeRepository nodeRepo;
 	UpdateMsgsSeen upDatesSeen;
-	SendPacket sendPacket;
+	CacheServerSendPacket sendPacket;
 	FIB fib;
 	DirectlyConnectedNodes directlyConnectedNodes;
 	Dijkstras dijkstras;
@@ -40,7 +40,7 @@ public class ProcessUpdates {
 		this.upDatesSeen = upDatesSeen;
 		this.fib = fib;
 		this.directlyConnectedNodes = directlyConnectedNodes;
-		this.sendPacket = new SendPacket();
+		this.sendPacket = new CacheServerSendPacket();
 		this.dijkstras = new Dijkstras();
 	}
 

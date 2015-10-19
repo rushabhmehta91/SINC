@@ -5,7 +5,7 @@ import topology.FIB;
 import topology.NodeRepository;
 import topology.PIT;
 import topology.ProcessRoutingPackets;
-import topology.SendPacket;
+import topology.CacheServerSendPacket;
 import topology.UpdateMsgsSeen;
 
 public class RoutingProcessTest {
@@ -16,7 +16,7 @@ public class RoutingProcessTest {
 	ProcessRoutingPackets process;
 	DirectlyConnectedNodes directlyConnectedNodes;
 	UpdateMsgsSeen upDatesSeen;
-	SendPacket sendPacket;
+	CacheServerSendPacket sendPacket;
 
 	public RoutingProcessTest(){
 
@@ -76,7 +76,7 @@ public class RoutingProcessTest {
 		fib.addPrefixToFIB("prefix1", "A");
 		fib.addPrefixToFIB("prefix2", "B");
 
-		this.sendPacket= new SendPacket();
+		this.sendPacket= new CacheServerSendPacket();
 
 	}
 

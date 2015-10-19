@@ -14,7 +14,7 @@ import packetObjects.PacketObj;
  *
  */
 public class UpdateQueueHandler implements Runnable {
-	PacketQueue2 packetQueue2;
+	CacheServerPacketQueue2 packetQueue2;
 	NodeRepository nodeRepo;
 	FIB fib;
 	DirectlyConnectedNodes directlyConnectedNodes;
@@ -36,7 +36,7 @@ public class UpdateQueueHandler implements Runnable {
 	 * @param updateMsgsSeen
 	 * @param running
 	 */
-	public UpdateQueueHandler(PacketQueue2 packetQueue2, 
+	public UpdateQueueHandler(CacheServerPacketQueue2 packetQueue2, 
 			NodeRepository nodeRepo, 
 			FIB fib, 
 			DirectlyConnectedNodes directlyConnectedNodes,

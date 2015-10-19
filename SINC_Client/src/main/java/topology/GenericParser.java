@@ -23,7 +23,7 @@ import com.google.gson.JsonObject;
 public class GenericParser {
 
 	Gson gson = new Gson();
-	Parse2 parse = new Parse2();
+	ClientParse2 parse = new ClientParse2();
 	PacketQueue2 packetQueue2;
 	private static Logger logger = LogManager.getLogger(GenericParser.class);
 

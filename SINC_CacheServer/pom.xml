@@ -31,6 +31,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<outputDirectory>${project.parent.basedir}/jar</outputDirectory>
 					<finalName>ccn${buildNumber}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
@@ -50,6 +51,11 @@
 			<version>2.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>SINC</groupId>
+			<artifactId>SINC_Parent</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

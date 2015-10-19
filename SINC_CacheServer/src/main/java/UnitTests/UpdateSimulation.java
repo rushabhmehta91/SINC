@@ -15,7 +15,7 @@ import topology.NodeRepository;
 import topology.PIT;
 import topology.ProcessRoutingPackets;
 import topology.ProcessUpdates;
-import topology.SendPacket;
+import topology.CacheServerSendPacket;
 import topology.UpdateMsgsSeen;
 
 public class UpdateSimulation {
@@ -27,7 +27,7 @@ public class UpdateSimulation {
 	ProcessRoutingPackets processRouting;
 	DirectlyConnectedNodes directlyConnectedNodes;
 	UpdateMsgsSeen upDatesSeen;
-	SendPacket sendPacket;
+	CacheServerSendPacket sendPacket;
 
 	public UpdateSimulation(){
 		directlyConnectedNodes = new DirectlyConnectedNodes();
@@ -37,7 +37,7 @@ public class UpdateSimulation {
 		pit = new PIT();
 		fib = new FIB(nodeRepo, pit, directlyConnectedNodes);
 		process = new ProcessUpdates(nodeRepo, upDatesSeen, fib, directlyConnectedNodes);
-		sendPacket = new SendPacket();
+		sendPacket = new CacheServerSendPacket();
 	}
 
 

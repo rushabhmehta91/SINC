@@ -10,6 +10,7 @@
   	<module>SINC_Client</module>
   	<module>SINC_Server</module>
   	<module>SINC_visualizationServer</module>
+  	<module>SINC_Parent</module>
   </modules>
   
   <scm>

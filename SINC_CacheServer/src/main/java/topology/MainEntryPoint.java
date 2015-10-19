@@ -35,10 +35,10 @@ public class MainEntryPoint implements Runnable{
 	int fibSleepTime;
 	private static Logger logger = LogManager.getLogger(MainEntryPoint.class);
 
-	public PacketQueue2 packetQueue2;
+	public CacheServerPacketQueue2 packetQueue2;
 	NodeRepository nodeRepo;
 	PIT pit;
-	DirectlyConnectedNodes directlyConnectedNodes;
+	private DirectlyConnectedNodes directlyConnectedNodes;
 	UpdateMsgsSeen updateMsgsSeen;
 	FIB fib;
 	Scanner scanner; 
@@ -62,12 +62,12 @@ public class MainEntryPoint implements Runnable{
 		this.fibSleepTime = fibSleepTime;
 		this.running = true;
 
-		packetQueue2 = new PacketQueue2();
+		packetQueue2 = new CacheServerPacketQueue2();
 		nodeRepo = new NodeRepository(thisMachinesName);
 		pit = new PIT();
-		directlyConnectedNodes = new DirectlyConnectedNodes();
+		setDirectlyConnectedNodes(new DirectlyConnectedNodes());
 		updateMsgsSeen = new UpdateMsgsSeen();
-		fib = new FIB(nodeRepo, pit, directlyConnectedNodes);
+		fib = new FIB(nodeRepo, pit, getDirectlyConnectedNodes());
 		// scanner = new Scanner(System.in);
 	}
 
@@ -85,23 +85,23 @@ public class MainEntryPoint implements Runnable{
 		//add my name to the FIB table 
 		fib.addPrefixToFIB(thisMachinesName, thisMachinesName);
 		//add my self as a directly connected client
-		directlyConnectedNodes.addDirectlyConnectedClient(thisMachinesName);
+		getDirectlyConnectedNodes().addDirectlyConnectedClient(thisMachinesName);
 		//add my name as a prefix 
-		directlyConnectedNodes.getDirectlyConnectedClient(thisMachinesName).addPrefix(thisMachinesName);
+		getDirectlyConnectedNodes().getDirectlyConnectedClient(thisMachinesName).addPrefix(thisMachinesName);
 
 		//start the handlers
 
 		//general
 		Thread generalQueueHandler = new Thread(new 
-				GeneralQueueHandler(packetQueue2, running));
+				CacheServerGeneralQueueHandler(packetQueue2, running));
 		//update
 		Thread updateQueueHandler = new Thread( new 
 				UpdateQueueHandler(packetQueue2, nodeRepo, fib, 
-						directlyConnectedNodes, updateMsgsSeen, running));
+						getDirectlyConnectedNodes(), updateMsgsSeen, running));
 		//routing
 		Thread routingQueueHandler = new Thread ( new 
 				RoutingQueueHandler(packetQueue2, nodeRepo, fib, 
-						pit, directlyConnectedNodes, running));
+						pit, getDirectlyConnectedNodes(), running));
 
 		generalQueueHandler.start();
 		updateQueueHandler.start();
@@ -163,7 +163,7 @@ public class MainEntryPoint implements Runnable{
 		}
 	}
 	public String printDirectlyConnectedRouters(){
-		String[] routers = directlyConnectedNodes.getDirectlyConnectedRoutersList();
+		String[] routers = getDirectlyConnectedNodes().getDirectlyConnectedRoutersList();
 		String returnString="";
 		for(String router : routers){
 			returnString+=router+",";
@@ -171,7 +171,7 @@ public class MainEntryPoint implements Runnable{
 		return returnString;
 	}
 	public String printDirectlyConnectedClietns(){
-		ArrayList<String> entries = directlyConnectedNodes.getClientEntries();
+		ArrayList<String> entries = getDirectlyConnectedNodes().getClientEntries();
 		String returnString="";
 		for(String entry : entries){
 			returnString+=entry+",";
@@ -187,7 +187,7 @@ public class MainEntryPoint implements Runnable{
 
 	public void intrestPacket(String contentName){
 		IntrestObj intrestObj1 = new IntrestObj(contentName, "", 12345);
-		SendPacket sendPacket = new SendPacket();
+		CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 		sendPacket.createIntrestPacket(intrestObj1);
 		PacketObj packetObj1 = new PacketObj(intrestObj1.getOriginalPacket(), "53830144", false);
 		packetQueue2.addToGeneralQueue(packetObj1);
@@ -195,7 +195,7 @@ public class MainEntryPoint implements Runnable{
 	}
 
 	public void dataPacket(String contentName, String originRouter, String fromNode){
-		SendPacket sendPacket = new SendPacket();
+		CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 		byte b = 0;
 		DataObj dataObj = new DataObj(contentName, originRouter, b, "data data", b, true);
 		sendPacket.createDataPacket(dataObj);
@@ -206,7 +206,7 @@ public class MainEntryPoint implements Runnable{
 	public void prefix(String prefix, boolean addRemove){
 		String msgID = nodeRepo.thisMachinesName + System.nanoTime();
 		PrefixObj prefixObj4 = new PrefixObj(prefix, msgID, nodeRepo.thisMachinesName, addRemove);
-		SendPacket sendPacket = new SendPacket();
+		CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 		sendPacket.createPrefixPacket(prefixObj4);
 		PacketObj packetObj1 = new PacketObj(prefixObj4.getOriginalPacket(), nodeRepo.thisMachinesName, false);
 		packetQueue2.addToGeneralQueue(packetObj1);
@@ -219,7 +219,7 @@ public class MainEntryPoint implements Runnable{
 		prefixList.add("prefix2/video");
 		prefixList.add("prefix3/video/news");
 		PrefixListObj prefixListObj3 = new PrefixListObj(prefixList, nodeRepo.thisMachinesName, addRemove, msgID);
-		SendPacket sendPacket = new SendPacket();
+		CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 		sendPacket.createPrefixListPacket(prefixListObj3);
 		PacketObj packetObj1 = new PacketObj(prefixListObj3.getOriginalPacket(), nodeRepo.thisMachinesName, false);
 		packetQueue2.addToGeneralQueue(packetObj1);
@@ -227,7 +227,7 @@ public class MainEntryPoint implements Runnable{
 
 	public void ping(String nodeID){
 		IntrestObj intrestObj1 = new IntrestObj(nodeID+"/ping", nodeRepo.getThisMachinesName(), 12345);
-		SendPacket sendPacket = new SendPacket();
+		CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 		sendPacket.createIntrestPacket(intrestObj1);
 		PacketObj packetObj1 = new PacketObj(intrestObj1.getOriginalPacket(), nodeRepo.getThisMachinesName(), false);
 		packetQueue2.addToGeneralQueue(packetObj1);
@@ -259,6 +259,14 @@ public class MainEntryPoint implements Runnable{
 		for(int i = 1; i <= nodeCounter; i++){
 			System.out.println("Node: " + i + " time:"+ (nodeRepo.convergenceHM.get(i) - nodeRepo.convergenceHM.get(1)) );
 		}
+	}
+
+	public DirectlyConnectedNodes getDirectlyConnectedNodes() {
+		return directlyConnectedNodes;
+	}
+
+	public void setDirectlyConnectedNodes(DirectlyConnectedNodes directlyConnectedNodes) {
+		this.directlyConnectedNodes = directlyConnectedNodes;
 	}
 
 }

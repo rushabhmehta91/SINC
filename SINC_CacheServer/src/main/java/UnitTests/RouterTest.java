@@ -13,16 +13,16 @@ import packetObjects.PrefixObj;
 import topology.DirectlyConnectedNodes;
 import topology.FIB;
 import topology.FIBEntryDiscard;
-import topology.GeneralQueueHandler;
+import topology.CacheServerGeneralQueueHandler;
 import topology.MsgIDEntryDiscard;
 import topology.NeighborAndCostStrings;
 import topology.Node;
 import topology.NodeRepository;
 import topology.PIT;
 import topology.PITEntryDiscard;
-import topology.PacketQueue2;
+import topology.CacheServerPacketQueue2;
 import topology.RoutingQueueHandler;
-import topology.SendPacket;
+import topology.CacheServerSendPacket;
 import topology.UpdateMsgsSeen;
 import topology.UpdateQueueHandler;
 
@@ -34,14 +34,14 @@ public class RouterTest implements Runnable{
 	int sleepTime;
 	long keepMsgTime;
 
-	PacketQueue2 packetQueue2;
+	CacheServerPacketQueue2 packetQueue2;
 	NodeRepository nodeRepo;
 	PIT pit;
 	DirectlyConnectedNodes directlyConnectedNodes;
 	UpdateMsgsSeen updateMsgsSeen;
 	FIB fib;
 	Scanner scanner; 
-	SendPacket sendPacket = new SendPacket();
+	CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 
 	public RouterTest(String thisMachinesName, int sleepTime, long keepMsgTime) {
 		this.thisMachinesName = thisMachinesName;
@@ -49,7 +49,7 @@ public class RouterTest implements Runnable{
 		this.keepMsgTime = keepMsgTime;
 		this.running = true;
 
-		packetQueue2 = new PacketQueue2();
+		packetQueue2 = new CacheServerPacketQueue2();
 		nodeRepo = new NodeRepository(thisMachinesName);
 		pit = new PIT();
 		directlyConnectedNodes = new DirectlyConnectedNodes();
@@ -80,7 +80,7 @@ public class RouterTest implements Runnable{
 
 		//general
 		Thread generalQueueHandler = new Thread(new 
-				GeneralQueueHandler(packetQueue2, running));
+				CacheServerGeneralQueueHandler(packetQueue2, running));
 		//update
 		Thread updateQueueHandler = new Thread( new 
 				UpdateQueueHandler(packetQueue2, nodeRepo, fib, 

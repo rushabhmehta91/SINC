@@ -25,12 +25,13 @@
 					<archive>
 						<manifest>
 							<!-- Jar file entry point -->
-							<mainClass>caching.ServerLFS</mainClass>
+							<mainClass>overlay.Server</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<outputDirectory>${project.parent.basedir}/jar</outputDirectory>
 					<finalName>server${buildNumber}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
@@ -43,6 +44,11 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>SINC</groupId>
+			<artifactId>SINC_Parent</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

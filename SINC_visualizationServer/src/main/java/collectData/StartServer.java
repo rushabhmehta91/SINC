@@ -139,8 +139,18 @@ public class StartServer {
 			node.put("label", nodes.get(ID).getIp()+"-"+nodes.get(ID).getId());
 			node.put("x", (int)(Math.random()*10));
 			node.put("y", (int)(Math.random()*10));
-			node.put("size", (int)(Math.random()*10));
-			node.put("color", "#666");
+			node.put("size", "10");
+			if(nodes.get(ID).getMachineType()==2){
+				node.put("color", "#666");
+			}else{
+				if(nodes.get(ID).getMachineType()==1){
+					node.put("color", "#FF0000");
+				}else{
+					if(nodes.get(ID).getMachineType()==3){
+						node.put("color", "#008000");
+					}
+				}
+			}
 			nodeList.add(node);
 		}
 		HashSet<String> edgeIDList=new HashSet<>();

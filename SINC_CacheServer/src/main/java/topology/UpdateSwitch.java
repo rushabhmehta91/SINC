@@ -26,7 +26,7 @@ public class UpdateSwitch implements Runnable{
 	NodeRepository nodeRepo;
 	ProcessUpdates process;
 	UpdateMsgsSeen msgsSeen;
-	Parse2 parse2;
+	CacheServerParse2 parse2;
 	@SuppressWarnings("rawtypes")
 	GenericPacketObj genericPacketObj;
 	private static Logger logger = LogManager.getLogger(UpdateMsgsSeen.class);
@@ -50,7 +50,7 @@ public class UpdateSwitch implements Runnable{
 		this.nodeRepo = nodeRepo;
 		this.msgsSeen = updateMsgsSeen;
 		this.process = new ProcessUpdates(nodeRepo, updateMsgsSeen, fib, directlyConnectedNodes);
-		this.parse2 = new Parse2();
+		this.parse2 = new CacheServerParse2();
 
 	}
 

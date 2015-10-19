@@ -14,10 +14,10 @@ class SocketContainer {
 	Socket socket;
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
-	Link link;
+	ClientLink link;
 
 	public SocketContainer(Socket socket, ObjectInputStream ois,
-			ObjectOutputStream oos, Link link) {
+			ObjectOutputStream oos, ClientLink link) {
 		this.socket = socket;
 		this.ois = ois;
 		this.oos = oos;

@@ -43,7 +43,7 @@ public class RoutingSwitch implements Runnable{
 	//Parse parse;
 	NodeRepository nodeRepo;
 	DirectlyConnectedNodes directlyConnectedNodes;
-	PacketQueue2 packetQueue2;
+	CacheServerPacketQueue2 packetQueue2;
 	String recievedFromNode;
 	private static Logger logger = LogManager.getLogger(RoutingSwitch.class);
 
@@ -62,7 +62,7 @@ public class RoutingSwitch implements Runnable{
 			PIT pit,
 			DirectlyConnectedNodes directlyConnectedNodes,
 			NodeRepository nodeRepo,
-			PacketQueue2 packetQueue2){
+			CacheServerPacketQueue2 packetQueue2){
 
 		//this.packet = packet;
 		this.genericPacketObj = genericPacketObj;
@@ -105,7 +105,7 @@ public class RoutingSwitch implements Runnable{
 						process.preocessPingRequest(intrestObj);
 					}else{
 
-						SendPacket sendPacket = new SendPacket();
+						CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 						//the packet is for this node
 						//parse the neighbor request 
 						//NeighborRequestObj neighborRequestObj = new NeighborRequestObj(genericPacketObj.getRecievedFromNode());
@@ -175,7 +175,7 @@ public class RoutingSwitch implements Runnable{
 						JsonObject jsonObject = gson.fromJson(dataObj.getData(), JsonObject.class);
 						JsonElement jsonActionElement = jsonObject.get("action");
 						String nestedAction = jsonActionElement.getAsString();
-						SendPacket sendPacket = new SendPacket();
+						CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 
 						if(nestedAction.equals("prefixResponse") == true){
 							//call prefix function

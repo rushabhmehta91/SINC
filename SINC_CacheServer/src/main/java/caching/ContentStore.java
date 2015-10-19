@@ -4,7 +4,7 @@ import overlay.Peer;
 import packetObjects.DataObj;
 import packetObjects.PrefixListObj;
 import packetObjects.PrefixObj;
-import topology.SendPacket;
+import topology.CacheServerSendPacket;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +24,7 @@ public class ContentStore {
 
     public static HashMap<String, Content> store;
     public static ArrayList<String> storeList;
-    public static SendPacket sendPacketObj;
+    public static CacheServerSendPacket sendPacketObj;
     static Runtime r = Runtime.getRuntime();
     private static ObjectOutputStream oos = null;
     private static ObjectInputStream ois = null;
@@ -33,7 +33,7 @@ public class ContentStore {
     static {
         storeList = new ArrayList<String>();
         store = new HashMap<String, Content>();
-        sendPacketObj = new SendPacket();
+        sendPacketObj = new CacheServerSendPacket();
 
     }
 
@@ -224,7 +224,10 @@ public class ContentStore {
                 Peer.generateID(Peer.getIP(Peer.IP)) + "", addRemove);
         //sendPacketObj.createPrefixPacket(list);
         sendPacketObj.createClientPrefix(list);
-        for (String e : Peer.neighbors.keySet()) {
+        for (String e : Peer.mep.getDirectlyConnectedNodes().getDirectlyConnectedRouters().keySet()) {
+            sendPacketObj.forwardPacket(list.getOriginalPacket(), e);
+        }
+        for (String e : Peer.mep.getDirectlyConnectedNodes().getDirectlyConnectedClients().keySet()) {
             sendPacketObj.forwardPacket(list.getOriginalPacket(), e);
         }
     }

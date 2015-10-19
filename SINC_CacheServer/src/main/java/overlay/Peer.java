@@ -19,7 +19,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import topology.MainEntryPoint;
-import topology.PassToRoutingLayer;
+import topology.CacheServerPassToRoutingLayer;
 import overlay.VisualizeMessage;
 
 /**
@@ -51,14 +51,14 @@ public class Peer { // implements PeerInterface
 	static HashSet<String> allNodes;
 	static Scanner scanner;
 	static int logN;
-	static MainEntryPoint mep = null;
+	public static MainEntryPoint mep = null;
 	static NodeDetails nDetails = null;
 
 	static HashMap<String, String> idIPMap;
 
 	static LinkedList<Long> requests;
 
-	static PassToRoutingLayer routing;
+	static CacheServerPassToRoutingLayer routing;
 	private static Logger logger = LogManager.getLogger(Peer.class);
 
 	// static block for initializing static content
@@ -187,14 +187,14 @@ public class Peer { // implements PeerInterface
 		 * Start ROUTING
 		 *************************************/
 
-		routing = new PassToRoutingLayer(mep.packetQueue2);
+		routing = new CacheServerPassToRoutingLayer(mep.packetQueue2);
 		scanner = new Scanner(System.in);
 
 		boolean alive = true;
 		String action = "";
 		if (nDetails == null) {
 			nDetails = new NodeDetails(ID, idIPMap.get(ID),
-					mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns());
+					mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(), 2);
 		}
 		// connection to visualize server
 		Thread a = new Thread(new Runnable() {
@@ -205,7 +205,7 @@ public class Peer { // implements PeerInterface
 				// TODO Auto-generated method stub
 				if (nDetails == null) {
 					nDetails = new NodeDetails(ID, idIPMap.get(ID),
-							mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns());
+							mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(),2);
 					sendtoVisualizeServer();
 				}
 				while (alive) {
@@ -362,7 +362,7 @@ public class Peer { // implements PeerInterface
 	// 1,000,000,000 nano time == 1 second
 	public static MainEntryPoint startRouting() {
 		MainEntryPoint mep = new MainEntryPoint(ID + "", 10000, 7000000000L, 20000, 60000000000L, 20000);
-		routing = new PassToRoutingLayer(mep.packetQueue2);
+		routing = new CacheServerPassToRoutingLayer(mep.packetQueue2);
 
 		return mep;
 
@@ -372,7 +372,7 @@ public class Peer { // implements PeerInterface
 	 * This method updates meta data after adding new peer connection.
 	 */
 	public static void addPeer(JoinPacket packet, Socket peerSocket, ObjectOutputStream oos, ObjectInputStream ois,
-			Link link) throws IOException {
+			CacheServerLink link) throws IOException {
 		// System.out.println("addPeer called");
 		String peer = getIP(peerSocket.getRemoteSocketAddress().toString());
 		neighbors.put(peer, new SocketContainer(peerSocket, ois, oos, link));
@@ -443,7 +443,7 @@ public class Peer { // implements PeerInterface
 		System.out.println("Acknowledgement type: " + mAck.type);
 
 		// start listening to connected peer for any future communication
-		Link link = new Link(peerSocket.getRemoteSocketAddress() + "", ois, 3);
+		CacheServerLink link = new CacheServerLink(peerSocket.getRemoteSocketAddress() + "", ois, 3);
 		link.start();
 		//
 		addPeer(mAck.packet, peerSocket, oos, ois, link);

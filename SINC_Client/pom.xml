@@ -31,6 +31,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<outputDirectory>${project.parent.basedir}/jar</outputDirectory>
 					<finalName>client${buildNumber}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
@@ -44,5 +45,11 @@
 			<artifactId>gson</artifactId>
 			<version>2.4</version>
 		</dependency>
+		<dependency>
+			<groupId>SINC</groupId>
+			<artifactId>SINC_Parent</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
+	<groupId>SINC</groupId>
 </project>

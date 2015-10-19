@@ -13,7 +13,7 @@ import packetObjects.GenericPacketObj;
  */
 public class RoutingQueueHandler implements Runnable{
 
-	PacketQueue2 packetQueue2;
+	CacheServerPacketQueue2 packetQueue2;
 	NodeRepository nodeRepo;
 	FIB fib;
 	PIT pit;
@@ -30,7 +30,7 @@ public class RoutingQueueHandler implements Runnable{
 	 * @param directlyConnectedNodes
 	 * @param running
 	 */
-	public RoutingQueueHandler(PacketQueue2 packetQueue2, 
+	public RoutingQueueHandler(CacheServerPacketQueue2 packetQueue2, 
 			NodeRepository nodeRepo, 
 			FIB fib, 
 			PIT pit, 

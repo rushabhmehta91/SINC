@@ -27,7 +27,7 @@ public class ProcessRoutingPackets {
 	//Parse parse;
 	FIB fib;
 	PIT pit;
-	SendPacket sendPacket;
+	CacheServerSendPacket sendPacket;
 	DirectlyConnectedNodes directlyConnectedNodes;
 	String recievedFromNode;
 	private static Logger logger = LogManager.getLogger(ProcessRoutingPackets.class);
@@ -54,7 +54,7 @@ public class ProcessRoutingPackets {
 		this.directlyConnectedNodes = directlyConnectedNodes;
 		this.recievedFromNode = recievedFromNode;
 		//this.parse = new Parse();
-		this.sendPacket = new SendPacket();
+		this.sendPacket = new CacheServerSendPacket();
 
 	}
 
