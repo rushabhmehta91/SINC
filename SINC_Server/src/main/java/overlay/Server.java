@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -203,6 +204,8 @@ public class Server implements Serializable {
 
 	public static Content serveRequest(String fileName) {
 		Content c;
+		DataBytes dataBytes = null;
+		byte[] bytesArr;
 		System.out.println("Serving request:" + fileName);
 		if (storeList.contains(fileName)) {
 			logger.info("Request content found!!!!!");
@@ -211,7 +214,17 @@ public class Server implements Serializable {
 
 			// put file object in content and return it.
 			File f = new File("cache/" + fileName);
-			c = new Content("test.txt", new ArrayList<String>(), 200, f);
+			try {
+                bytesArr = IOUtils.toByteArray(new FileInputStream(f));
+                dataBytes = new DataBytes(bytesArr);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+			c = new Content(fileName, new ArrayList<String>(), 200, dataBytes);
 			return c;
 
 		} else {
@@ -393,33 +406,30 @@ public class Server implements Serializable {
 	    }
 
 		private static void fillStore() {
-//			String contentName;
-//			File files = new File("cache");
-//			String[] filesList = files.list();
-//			for ( String s : filesList ) {
-//				contentName = "cache/" + s;
-//				System.out.println("Adding: " + contentName);
-//				storeList.add(contentName);			
-//			}
+			String contentName;
+			File files = new File("cache");
+			String[] filesList = files.list();
+			for ( String s : filesList ) {
+				contentName = s;
+				System.out.println("Adding: " + contentName);
+				storeList.add(contentName);			
+			}
 			
-			Content c1 = new Content("firstContent", new ArrayList<String>(), 200, "updatedSecondContent1");
-			Content c2 = new Content("secondContent", new ArrayList<String>(), 200, "updatedSecondContent2");
-			Content c3 = new Content("thirdContent", new ArrayList<String>(), 200, "updatedSecondContent3");
-			Content c4 = new Content("forthContent", new ArrayList<String>(), 200, "updatedSecondContent4");
-			Content c5 = new Content("test", new ArrayList<String>(), 200, "updatedSecondContent5");
-			storeList.add(c1.getContentName());
-			storeList.add(c2.getContentName());
-			storeList.add(c3.getContentName());
-			storeList.add(c4.getContentName());
-			storeList.add(c5.getContentName());
-			store.put(c1.getContentName(), c1);
-			store.put(c2.getContentName(), c2);
-			store.put(c3.getContentName(), c3);
-			store.put(c4.getContentName(), c4);
-			store.put(c5.getContentName(), c5);
-			String contentName = "test.txt";
-			System.out.println("Adding: " + contentName);
-	        storeList.add(contentName);
+//			Content c1 = new Content("firstContent", new ArrayList<String>(), 200, "updatedSecondContent1");
+//			Content c2 = new Content("secondContent", new ArrayList<String>(), 200, "updatedSecondContent2");
+//			Content c3 = new Content("thirdContent", new ArrayList<String>(), 200, "updatedSecondContent3");
+//			Content c4 = new Content("forthContent", new ArrayList<String>(), 200, "updatedSecondContent4");
+//			Content c5 = new Content("test", new ArrayList<String>(), 200, "updatedSecondContent5");
+//			storeList.add(c1.getContentName());
+//			storeList.add(c2.getContentName());
+//			storeList.add(c3.getContentName());
+//			storeList.add(c4.getContentName());
+//			storeList.add(c5.getContentName());
+//			store.put(c1.getContentName(), c1);
+//			store.put(c2.getContentName(), c2);
+//			store.put(c3.getContentName(), c3);
+//			store.put(c4.getContentName(), c4);
+//			store.put(c5.getContentName(), c5);
 
 		}
 
@@ -542,7 +552,7 @@ public class Server implements Serializable {
 
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
-			String defaultVS = "172.31.38.100";
+			String defaultVS = "172.31.49.0";
 			System.out.println("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			// Scanner sc = new Scanner(System.in);
 			// String reply = sc.nextLine();

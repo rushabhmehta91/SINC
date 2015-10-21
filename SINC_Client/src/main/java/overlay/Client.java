@@ -5,6 +5,8 @@ import topology.GeneralQueueHandler;
 import topology.PacketQueue2;
 import topology.ClientSendPacket;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -52,6 +54,7 @@ public class Client {
 		gqhThread.start();
 		pd = new ProcessData(rtt);
 		pd.start();
+		int noReqContent = 0; //get rid of this var
 		
 		// connection to visualize server
 		Thread a = new Thread(new Runnable() {
@@ -95,7 +98,6 @@ public class Client {
 					Message<JoinPacket> joinMessage = new Message<JoinPacket>(11); // handle
 					// in
 					// Peer
-					System.out.println("hiiii");
 					oos.writeObject(joinMessage);
 					link = new ClientLink(cacheServerAddress, ois,1);
 					link.start();
@@ -108,18 +110,34 @@ public class Client {
 				}
 			}
 			
+            File contentList = new File("contentList.txt");
+            FileInputStream fis = new FileInputStream(contentList);
+            Scanner sc = new Scanner(fis);
+            
+            if (noReqContent == 0) {
+                while (sc.hasNext()) {
+                    String msg = sc.nextLine();
+                    System.out.println("Requesting: " + msg);
+                    IntrestObj intrst = new IntrestObj(msg, "", 1);
+                    sendPacketObj.createIntrestPacket(intrst);
+                    sendPacketObj.forwardPacket(intrst.getOriginalPacket());
+                    rtt.put(msg, System.currentTimeMillis());
+                    noReqContent++;
+                }
+            }
+			sc.close();
 			
-			System.out.println("Enter content to be fetched(EXIT to exit): ");
-			String msg = s.nextLine();
-			IntrestObj intrst = new IntrestObj(msg, "", 1);
-			sendPacketObj.createIntrestPacket(intrst);
-			sendPacketObj.forwardPacket(intrst.getOriginalPacket());
-			rtt.put(msg, System.currentTimeMillis());
+//			System.out.println("Enter content to be fetched(EXIT to exit): ");
+//			String msg = s.nextLine();
+//			IntrestObj intrst = new IntrestObj(msg, "", 1);
+//			sendPacketObj.createIntrestPacket(intrst);
+//			sendPacketObj.forwardPacket(intrst.getOriginalPacket());
+//			rtt.put(msg, System.currentTimeMillis());
 		}
 	}
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
-			String defaultVS = "172.31.38.100";
+			String defaultVS = "172.31.49.0";
 			System.out.println(
 					"Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			//Scanner sc = new Scanner(System.in);

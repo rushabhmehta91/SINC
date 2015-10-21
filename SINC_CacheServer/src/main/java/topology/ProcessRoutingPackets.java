@@ -261,7 +261,7 @@ public class ProcessRoutingPackets {
 				if(directlyConnectedNodes.doesDirectlyConnectedClientExist(clientRequesters.get(i)) == true){
 
 					//forward the packet to each of the client requesters
-					sendPacket.forwardPacket(dataObj.getOriginalPacket(), clientRequesters.get(i));
+					sendPacket.forwardPacket(dataObj, clientRequesters.get(i));
 
 				}
 			}

@@ -73,9 +73,7 @@ public class ClientLink extends Link {
 		if (m.type == 7) {
 			Message<Object> m2 = m;
 			PacketObj pObj = new PacketObj(m2.packet, "", true);
-			Client.pq2.addToGeneralQueue(pObj);
-			DataObj d = (DataObj) pObj.getPacket();
-			System.out.println(d.getData().getClass());
+			Client.pq2.addToGeneralQueue(pObj);			
 		}
 	}
 }

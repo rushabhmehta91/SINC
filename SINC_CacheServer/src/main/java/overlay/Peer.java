@@ -466,7 +466,7 @@ public class Peer { // implements PeerInterface
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
 			// String defaultVS="127.0.0.1";
-			String defaultVS = "172.31.38.100";
+			String defaultVS = "172.31.49.0";
 			System.out.println("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			// Scanner sc=new Scanner(System.in);
 			// String reply=sc.nextLine();

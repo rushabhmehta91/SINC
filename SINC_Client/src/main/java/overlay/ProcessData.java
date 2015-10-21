@@ -1,5 +1,8 @@
 package overlay;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.LogManager;
@@ -41,12 +44,17 @@ public class ProcessData extends Thread {
 	}
 
 	public void processDataObj(DataObj dataObj) {
+	    DataBytes dataBytes = null;
 		String contentName = null;
 		if (dataObj != null) {
 			contentName = dataObj.getContentName();
 			try {
-				System.out.println("hi :)" + dataObj.getData().getClass());
-				System.out.println(dataObj.getData().toString());
+			    dataBytes = (DataBytes) dataObj.getData();
+			    System.out.println("writing content file!!");
+			    File f = new File(contentName);
+			    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
+			    bos.write(dataBytes.data);
+			    bos.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

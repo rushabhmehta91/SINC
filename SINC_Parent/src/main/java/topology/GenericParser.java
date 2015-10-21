@@ -50,7 +50,8 @@ public class GenericParser {
 		String type;
 		JsonObject jsonObject = new JsonObject();
 		try{
-
+		    System.out.println(packetObj.getPacket().getClass());
+		    System.out.println((String)packetObj.getPacket());
 			jsonObject = gson.fromJson((String)packetObj.getPacket(), JsonObject.class);
 			JsonElement jsonTypeElement = jsonObject.get("type");
 			type = jsonTypeElement.getAsString();

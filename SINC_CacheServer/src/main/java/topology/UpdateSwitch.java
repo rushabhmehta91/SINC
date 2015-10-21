@@ -1,6 +1,7 @@
 package topology;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -202,8 +203,10 @@ public class UpdateSwitch implements Runnable{
 			try {
 				if (addRemoveClientPrefixList == true) {
 					// add the packet
-					logger.info("add prefixlist");
-					System.out.println("add prefixlist");
+					System.out.println("Displaying the prefix list: ");
+					ArrayList<String> x = clientPrefixListObj.getPrefixList();
+					for ( int i = 0 ; i < x.size() ; i++ )
+					    System.out.println(x.get(i));
 					process.addClientPrefixList(clientPrefixListObj,
 							genericPacketObj.getRecievedFromNode());
 				} else {
