@@ -87,10 +87,10 @@ public class StartServer {
 	}
 
 	public void addnode(NodeDetails n1) {
-		System.out.println(n1.getId());
+		System.out.println(n1.getId() +" - "+ n1.getIp());
 		System.out.println(n1.getIp());
 		changeflag = true;
-		System.out.println("change flag true");
+		//System.out.println("change flag true");
 		if (!nodes.isEmpty() && nodes.containsKey(n1.getId())) {
 			nodes.get(n1.getId()).setNeighbours(n1.getNeighbours());
 		} else {
@@ -166,8 +166,6 @@ public class StartServer {
 				neighbourList[0]=nodes.get(ID).getNeighbours();
 			}
 			for(int index=0;index<neighbourList.length;index++){
-				System.out.println();
-				System.out.println(neighbourList[index]+"ID: "+ ID);
 				if(!ID.equals(neighbourList[index]) && !edgeIDList.contains(neighbourList[index]+"-"+ID)){
 					JSONObject edge=new JSONObject();
 					edgeIDList.add(ID+"-"+neighbourList[index]);
@@ -182,10 +180,10 @@ public class StartServer {
 		JSONObject jsonString =new JSONObject();
 		jsonString.put("nodes", nodeList);
 		jsonString.put("edges", edgeList);
-		System.out.println("\nJSON Object: " + jsonString);
+		//System.out.println("\nJSON Object: " + jsonString);
 		FileWriter file = null;
 		try {
-			file = new FileWriter("/Library/WebServer/Documents/release-v1/data.json");
+			file = new FileWriter("/var/www/html/vis/examples/network/data/data.json");
 		
         try {
             file.write(jsonString.toJSONString());

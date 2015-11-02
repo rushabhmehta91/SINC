@@ -42,19 +42,20 @@ public class CacheServerGenericParser extends GenericParser {
 		String type;
 		JsonObject jsonObject = new JsonObject();
 		try{
-
 			jsonObject = gson.fromJson((String)packetObj.getPacket(), JsonObject.class);
 			JsonElement jsonTypeElement = jsonObject.get("type");
 			type = jsonTypeElement.getAsString();
-
+			isJson = true;
 		}catch(Exception e){
-			type = "dropPacket";
-			DataObj dataObj = (DataObj) packetObj.getPacket();
-			type = dataObj.getType();
-			System.out.println("Satyajeet: " + dataObj.getData().getClass());
-
-			jsonObject = null;
-			isJson = false;
+			try{
+				jsonObject = null;
+				isJson = false;
+				DataObj dataObj = (DataObj) packetObj.getPacket();
+				type = dataObj.getType();
+				System.out.println("Satyajeet: " + dataObj.getData().getClass());
+			}catch(Exception e1){
+				type = "dropPacket";
+			}
 		}
 
 		switch (type){
@@ -160,7 +161,6 @@ public class CacheServerGenericParser extends GenericParser {
 		case "prefix" :
 
 			try{
-
 				prefixObj = parse.parsePrefixJson(jsonObject, (String)packetObj.getPacket());
 				GenericPacketObj<PrefixObj> gpoPrefixObj = new GenericPacketObj<PrefixObj>(action, packetObj.getRecievedFromNode(), prefixObj);
 				//add it to the Update Queue
@@ -174,7 +174,6 @@ public class CacheServerGenericParser extends GenericParser {
 		case "prefixList" : 
 
 			try{
-
 				prefixListObj = parse.parsePrefixListJson(jsonObject);
 				GenericPacketObj<PrefixListObj> gpoPrefixListObj = new GenericPacketObj<PrefixListObj>(action, packetObj.getRecievedFromNode(), prefixListObj);
 				//add it to the Update Queue

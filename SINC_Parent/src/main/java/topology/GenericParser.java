@@ -55,13 +55,17 @@ public class GenericParser {
 			jsonObject = gson.fromJson((String)packetObj.getPacket(), JsonObject.class);
 			JsonElement jsonTypeElement = jsonObject.get("type");
 			type = jsonTypeElement.getAsString();
-
+			isJson = true;
 		}catch(Exception e){
-			type = "dropPacket";
-			DataObj dataObj = (DataObj) packetObj.getPacket();
-			type = dataObj.getType();
-			jsonObject = null;
-			isJson = false;
+			try{
+				jsonObject = null;
+				isJson = false;
+				DataObj dataObj = (DataObj) packetObj.getPacket();
+				type = dataObj.getType();
+				System.out.println("Satyajeet: " + dataObj.getData().getClass());
+			}catch(Exception e1){
+				type = "dropPacket";
+			}
 		}
 
 		switch (type){
@@ -93,6 +97,7 @@ public class GenericParser {
 		    jsonTypeElement = jsonObject.get("action");
 		    action = jsonTypeElement.getAsString();
 		} else {
+			System.out.println(packetObj.getPacket());
 		    dataObj = (DataObj) packetObj.getPacket();
 		    action = dataObj.getAction();
 		}

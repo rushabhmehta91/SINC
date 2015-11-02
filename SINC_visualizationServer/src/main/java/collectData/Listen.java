@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
  */
 public class Listen extends Thread {
 	StartServer p;
-	ServerSocket serverSocket;
 	ObjectInputStream ois;
 	boolean running;
 	private static Logger logger = LogManager.getLogger(Listen.class);
