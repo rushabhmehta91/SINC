@@ -26,8 +26,9 @@ public class Client {
 	static ClientLink link;
 	static ClientSendPacket sendPacketObj;
 	static String ID;
-	static String name;
+	static String clientName;
 	static String cacheServerAddress="";
+	static String cacheServerAddressID="";
 	static HashMap<String, String> idIPMap = new HashMap<String, String>();
 	static GeneralQueueHandler gqh;
 	static PacketQueue2 pq2;
@@ -41,6 +42,8 @@ public class Client {
 	private static Logger logger = LogManager.getLogger(Client.class);
 
 	public static void main(String[] args) throws IOException {
+		clientName = InetAddress.getLocalHost().getHostAddress();
+		ID=generateID(getIP(clientName))+"";
 		Scanner s = new Scanner(System.in);
 		sendPacketObj = new ClientSendPacket();
 		boolean clientStarted = true;
@@ -64,7 +67,7 @@ public class Client {
 			public void run() {
 				// TODO Auto-generated method stub
 				while (alive) {
-					String currentNeigh=cacheServerAddress;
+					String currentNeigh=cacheServerAddressID;
 					String oldNeigh=nDetails.getNeighbours();
 					if(!currentNeigh.equals(oldNeigh)){
 						nDetails.setNeighbours(currentNeigh);
@@ -82,7 +85,7 @@ public class Client {
 		});
 		
 		if(nDetails==null){
-			nDetails=new NodeDetails(ID,idIPMap.get(ID),cacheServerAddress,3);
+			nDetails=new NodeDetails(ID,idIPMap.get(ID),cacheServerAddressID,3,"");
 		}
 		a.start();
 		while (clientStarted) {
@@ -92,7 +95,6 @@ public class Client {
 					System.out.print("Enter cache server to connect to: ");
 					cacheServerAddress = s.nextLine();
 					Socket cacheServer = new Socket(cacheServerAddress, 43125);
-					System.out.println("crating socket");
 					ois = new ObjectInputStream(cacheServer.getInputStream());
 					oos = new ObjectOutputStream(cacheServer.getOutputStream());
 					Message<JoinPacket> joinMessage = new Message<JoinPacket>(11); // handle
@@ -101,7 +103,7 @@ public class Client {
 					oos.writeObject(joinMessage);
 					link = new ClientLink(cacheServerAddress, ois,1);
 					link.start();
-					ID = generateID(getIP(cacheServerAddress)) + "";
+					cacheServerAddressID = generateID(getIP(cacheServerAddress)) + "";
 					connected = true;
 					// oos.writeObject("joining client");
 				} catch (UnknownHostException e) {
@@ -134,10 +136,12 @@ public class Client {
 //			sendPacketObj.forwardPacket(intrst.getOriginalPacket());
 //			rtt.put(msg, System.currentTimeMillis());
 		}
+		s.close();
 	}
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
-			String defaultVS = "172.31.49.0";
+
+			String defaultVS = "172.31.38.100";
 			System.out.println(
 					"Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			//Scanner sc = new Scanner(System.in);

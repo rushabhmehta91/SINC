@@ -18,6 +18,7 @@ import java.util.Scanner;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import caching.ContentStore;
 import topology.MainEntryPoint;
 import topology.CacheServerPassToRoutingLayer;
 import overlay.VisualizeMessage;
@@ -194,7 +195,7 @@ public class Peer { // implements PeerInterface
 		String action = "";
 		if (nDetails == null) {
 			nDetails = new NodeDetails(ID, idIPMap.get(ID),
-					mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(), 2);
+					mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(), 2,ContentStore.store.keySet().toString());
 		}
 		// connection to visualize server
 		Thread a = new Thread(new Runnable() {
@@ -205,7 +206,7 @@ public class Peer { // implements PeerInterface
 				// TODO Auto-generated method stub
 				if (nDetails == null) {
 					nDetails = new NodeDetails(ID, idIPMap.get(ID),
-							mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(),2);
+							mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(),2,ContentStore.store.keySet().toString());
 					sendtoVisualizeServer();
 				}
 				while (alive) {
@@ -216,9 +217,16 @@ public class Peer { // implements PeerInterface
 					}
 					String currentNeigh = mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns();
 					String oldNeigh = nDetails.getNeighbours();
+					String currentPrefix=ContentStore.store.keySet().toString();
+					String oldPrefix=nDetails.getContentStore();
 
-					if (!currentNeigh.equals(oldNeigh)) {
-						nDetails.setNeighbours(currentNeigh);
+					if (!currentNeigh.equals(oldNeigh) || !currentPrefix.equals(oldPrefix) ) {
+						if(!currentNeigh.equals(oldNeigh)){
+							nDetails.setNeighbours(currentNeigh);
+						}
+						if(!currentPrefix.equals(oldPrefix)){
+							nDetails.setContentStore(currentPrefix);
+						}
 						sendtoVisualizeServer();
 					}
 
@@ -466,7 +474,7 @@ public class Peer { // implements PeerInterface
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
 			// String defaultVS="127.0.0.1";
-			String defaultVS = "172.31.49.0";
+			String defaultVS = "172.31.38.100";
 			System.out.println("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			// Scanner sc=new Scanner(System.in);
 			// String reply=sc.nextLine();

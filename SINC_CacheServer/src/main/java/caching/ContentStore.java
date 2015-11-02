@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -253,5 +254,8 @@ public class ContentStore {
             return false;
         }
 
+    }
+    public Set<String> getPrefixList(){
+    	return store.keySet();
     }
 }

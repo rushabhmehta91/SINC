@@ -1,6 +1,7 @@
 package overlay;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class NodeDetails implements Serializable {
 	/**
@@ -13,11 +14,12 @@ public class NodeDetails implements Serializable {
 	String contentStore;
 	int machineType;
 
-	public NodeDetails(String ID, String IP, String neigh, int machineType) {
+	public NodeDetails(String ID, String IP, String neigh, int machineType, String contentStore) {
 		this.id = ID;
 		this.ip = IP;
 		this.neighbours = neigh;
 		this.machineType=machineType;
+		this.contentStore=contentStore;
 
 	}
 

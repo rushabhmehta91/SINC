@@ -136,18 +136,20 @@ public class StartServer {
 		for (String ID : nodes.keySet()){
 			JSONObject node=new JSONObject();
 			node.put("id",nodes.get(ID).getId());
-			node.put("label", nodes.get(ID).getIp()+"-"+nodes.get(ID).getId());
-			node.put("x", (int)(Math.random()*10));
-			node.put("y", (int)(Math.random()*10));
-			node.put("size", "10");
+			node.put("ip", nodes.get(ID).getIp());
+			node.put("neighbours",nodes.get(ID).getNeighbours());
+			node.put("contentStore", nodes.get(ID).getContentStore());
 			if(nodes.get(ID).getMachineType()==2){
 				node.put("color", "#666");
+				node.put("machineType", "CacheServer");
 			}else{
 				if(nodes.get(ID).getMachineType()==1){
 					node.put("color", "#FF0000");
+					node.put("machineType", "Server");
 				}else{
 					if(nodes.get(ID).getMachineType()==3){
 						node.put("color", "#008000");
+						node.put("machineType", "Client");
 					}
 				}
 			}
@@ -156,16 +158,22 @@ public class StartServer {
 		HashSet<String> edgeIDList=new HashSet<>();
 		JSONArray edgeList=new JSONArray();
 		for (String ID : nodes.keySet()){
-			String neighbourList[]=nodes.get(ID).getNeighbours().split(",");
+			String[] neighbourList = null;
+			if(nodes.get(ID).getNeighbours().contains(",")){
+				neighbourList=nodes.get(ID).getNeighbours().split(",");
+			}else{
+				neighbourList=new String[1];
+				neighbourList[0]=nodes.get(ID).getNeighbours();
+			}
 			for(int index=0;index<neighbourList.length;index++){
+				System.out.println();
+				System.out.println(neighbourList[index]+"ID: "+ ID);
 				if(!ID.equals(neighbourList[index]) && !edgeIDList.contains(neighbourList[index]+"-"+ID)){
 					JSONObject edge=new JSONObject();
 					edgeIDList.add(ID+"-"+neighbourList[index]);
 					edge.put("id", ID+"-"+neighbourList[index]);
 					edge.put("source", ID);
 					edge.put("target", neighbourList[index]);
-					edge.put("size", (int)(Math.random()*10));
-					edge.put("color", "#ccc");
 					edgeList.add(edge);
 				}
 			}
@@ -177,7 +185,7 @@ public class StartServer {
 		System.out.println("\nJSON Object: " + jsonString);
 		FileWriter file = null;
 		try {
-			file = new FileWriter("/home/ubuntu/data.json");
+			file = new FileWriter("/Library/WebServer/Documents/release-v1/data.json");
 		
         try {
             file.write(jsonString.toJSONString());

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 public class ContentStore {
 	static Runtime r = Runtime.getRuntime();
 	private static Logger logger = LogManager.getLogger(ContentStore.class);
-	public HashMap<String, Content> store;
+	public static HashMap<String, Content> store;
 	{
 		store = new HashMap<String, Content>();
 	}

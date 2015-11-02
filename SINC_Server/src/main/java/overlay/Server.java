@@ -27,6 +27,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import caching.Content;
+import caching.ContentStore;
 
 /**
  * Created by rushabhmehta91 on 5/4/15.
@@ -49,6 +50,7 @@ public class Server implements Serializable {
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
 	static String cacheServerAddress = "";
+	static String cacheServerID = "";
 	static NodeDetails nDetails = null;
 	// socket to communicate with vizualizeServer
 	static Socket vizualizeServerSocket;
@@ -71,6 +73,7 @@ public class Server implements Serializable {
 		// ServerLFS s1 = new ServerLFS();
 		try {
 			serverNameID = InetAddress.getLocalHost().getHostAddress();
+			ID=generateID(getIP(serverNameID))+"";
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -475,10 +478,18 @@ public class Server implements Serializable {
 			public void run() {
 				// TODO Auto-generated method stub
 				while (alive) {
-					String currentNeigh = cacheServerAddress;
+					String currentNeigh = cacheServerID;
 					String oldNeigh = nDetails.getNeighbours();
-					if (!currentNeigh.equals(oldNeigh)) {
-						nDetails.setNeighbours(currentNeigh);
+					String currentPrefix=storeList.toString();
+					String oldPrefix=nDetails.getContentStore();
+
+					if (!currentNeigh.equals(oldNeigh) || !currentPrefix.equals(oldPrefix) ) {
+						if(!currentNeigh.equals(oldNeigh)){
+							nDetails.setNeighbours(currentNeigh);
+						}
+						if(!currentPrefix.equals(oldPrefix)){
+							nDetails.setContentStore(currentPrefix);
+						}
 						sendtoVisualizeServer();
 					}
 					try {
@@ -491,7 +502,7 @@ public class Server implements Serializable {
 
 		});
 		if (nDetails == null) {
-			nDetails = new NodeDetails(ID, idIPMap.get(ID), cacheServerAddress, 1);
+			nDetails = new NodeDetails(ID, idIPMap.get(ID), cacheServerID, 1,"");
 		}
 
 		B.start();
@@ -504,10 +515,12 @@ public class Server implements Serializable {
 					if (csIP == null) {
 						System.out.print("Enter cache server to connect to: ");
 						cacheServerAddress = sc.nextLine();
+						cacheServerID=generateID(getIP(serverNameID))+"";
 					} else {
 						cacheServerAddress = csIP;
 					}
 					IP = cacheServerAddress;
+					
 					Socket cacheServer = null;
 					try {
 						System.out.println("creating socket");
@@ -552,7 +565,9 @@ public class Server implements Serializable {
 
 	private static void sendtoVisualizeServer() {
 		if (vizualizeServer == null) {
-			String defaultVS = "172.31.49.0";
+			
+			String defaultVS = "172.31.38.100";
+
 			System.out.println("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			// Scanner sc = new Scanner(System.in);
 			// String reply = sc.nextLine();
@@ -573,7 +588,7 @@ public class Server implements Serializable {
 			oos.writeObject(message);
 			oos.flush();
 			logger.info("message sent");
-			// System.out.println("Join message sent");
+			System.out.println("message sent");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
