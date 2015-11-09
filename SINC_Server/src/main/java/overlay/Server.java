@@ -203,7 +203,6 @@ public class Server implements Serializable  {
 
 	public static ContentPacket serveRequest(String fileName) {
 		ContentPacket c;
-		DataBytes dataBytes = null;
 		byte[] bytesArr = null;
 		System.out.println("Serving request:" + fileName);
 		if (storeList.contains(fileName)) {
@@ -215,7 +214,6 @@ public class Server implements Serializable  {
 			File f = new File("cache/" + fileName);
 			try {
                 bytesArr = IOUtils.toByteArray(new FileInputStream(f));
-                dataBytes = new DataBytes(bytesArr);
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
