@@ -131,6 +131,7 @@ public class GenericParser {
 	    				logger.info("generic parser added data OBJ to routing queue");
 	    				System.out.println("generic parser added data OBJ to routing queue");
 				    } else {
+				    	System.out.println("data received and forwarding now");
 				        dataObj = (DataObj) packetObj.getPacket();
 			            GenericPacketObj<DataObj> gpoData= new GenericPacketObj<DataObj>(action, packetObj.getRecievedFromNode(), dataObj);
 

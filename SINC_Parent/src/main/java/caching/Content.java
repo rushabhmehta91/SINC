@@ -1,6 +1,7 @@
 package caching;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,20 +11,22 @@ import java.util.List;
  * Created by rushabhmehta91 on 4/6/15.
  */
 public class Content implements Serializable{
-    public HashMap<String, Integer> listofScoreOnInterfaces;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 793117170541178992L;
+	public HashMap<String, Integer> listofScoreOnInterfaces;
     private String contentName;
     private int maxNScore;
     private int timeToLive;
-    public List<String> trail;
+    public ArrayList<String> trail;
     private long sizeInBytes;
     private Date lastUsed;
-    private Object contentCache;
 
     // constructors start
-    public Content(String contentName, List<String> trail, long sizeInBytes, Object contentCache) {
+    public Content(String contentName, ArrayList<String> trail, long sizeInBytes) {
         this.contentName = contentName;
 //        this.lastUsed = now;
-        this.contentCache = contentCache;
         this.maxNScore = 3;
         this.timeToLive = 999999;
         this.trail = trail;
@@ -31,14 +34,13 @@ public class Content implements Serializable{
         listofScoreOnInterfaces = new HashMap<String, Integer>();
     }
 
-    public Content(String contentName, int maxNScore, int timeToLive, List<String> trail, long sizeInBytes, Object contentCache) {
+    public Content(String contentName, int maxNScore, int timeToLive, ArrayList<String> trail, long sizeInBytes) {
         this.contentName = contentName;
         this.maxNScore = maxNScore;
         this.timeToLive = timeToLive;
         this.trail = trail;
         this.sizeInBytes = sizeInBytes;
 //        this.lastUsed = lastUsed;
-        this.contentCache = contentCache;
         listofScoreOnInterfaces = new HashMap<String, Integer>();
     }
     // constructors ends
@@ -77,11 +79,11 @@ public class Content implements Serializable{
         this.listofScoreOnInterfaces = listofScoreOnInterfaces;
     }
 
-    public List<String> getTrail() {
+    public ArrayList<String> getTrail() {
         return trail;
     }
 
-    public void setTrail(List<String> trail) {
+    public void setTrail(ArrayList<String> trail) {
         this.trail = trail;
     }
 
@@ -93,14 +95,7 @@ public class Content implements Serializable{
         this.sizeInBytes = sizeInBytes;
     }
 
-    public Object getContentCache() {
-        return contentCache;
-    }
-
-    public void setContentCache(Object contentCache) {
-        this.contentCache = contentCache;
-    }
-
+   
 
     //getter and setters ends
 

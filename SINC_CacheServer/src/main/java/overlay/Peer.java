@@ -41,7 +41,7 @@ public class Peer { // implements PeerInterface
 	static Socket vizualizeServerSocket;
 	static String vizualizeServer = null;
 	// ID of this node
-	static String ID;
+	public static String ID;
 	// serverSocket to listen on
 	static ServerSocket serverSocket;
 	// map of neighboring clients and servers
@@ -66,6 +66,7 @@ public class Peer { // implements PeerInterface
 	// like serverSocket used for listening
 	{
 		while (true) {
+
 			try {
 				serverSocket = new ServerSocket(43125);
 				break;
@@ -95,6 +96,7 @@ public class Peer { // implements PeerInterface
 		try {
 			IP = getIP(InetAddress.getLocalHost().getHostAddress());
 			ID = generateID("") + ""; // unique ID based on IP address
+
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -193,22 +195,17 @@ public class Peer { // implements PeerInterface
 
 		boolean alive = true;
 		String action = "";
-		if (nDetails == null) {
-			nDetails = new NodeDetails(ID, idIPMap.get(ID),
-					mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(), 2,ContentStore.store.keySet().toString());
-		}
+
 		// connection to visualize server
 		Thread a = new Thread(new Runnable() {
 			boolean alive = true;
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				if (nDetails == null) {
-					nDetails = new NodeDetails(ID, idIPMap.get(ID),
-							mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns(),2,ContentStore.store.keySet().toString());
-					sendtoVisualizeServer();
+					nDetails = new NodeDetails(ID, idIPMap.get(ID), "", 2, "");
 				}
+				// TODO Auto-generated method stub
 				while (alive) {
 					try {
 						Thread.sleep(10000);
@@ -217,20 +214,18 @@ public class Peer { // implements PeerInterface
 					}
 					String currentNeigh = mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns();
 					String oldNeigh = nDetails.getNeighbours();
-					String currentPrefix=ContentStore.store.keySet().toString();
-					String oldPrefix=nDetails.getContentStore();
+					String currentPrefix = ContentStore.store.keySet().toString();
+					String oldPrefix = nDetails.getContentStore();
 
-					if (!currentNeigh.equals(oldNeigh) || !currentPrefix.equals(oldPrefix) ) {
-						if(!currentNeigh.equals(oldNeigh)){
+					if (!currentNeigh.equals(oldNeigh) || !currentPrefix.equals(oldPrefix)) {
+						if (!currentNeigh.equals(oldNeigh)) {
 							nDetails.setNeighbours(currentNeigh);
 						}
-						if(!currentPrefix.equals(oldPrefix)){
+						if (!currentPrefix.equals(oldPrefix)) {
 							nDetails.setContentStore(currentPrefix);
 						}
 						sendtoVisualizeServer();
 					}
-
-					
 
 				}
 			}
@@ -545,24 +540,27 @@ public class Peer { // implements PeerInterface
 		// System.out.println("ID: " + ID);
 		// System.out.println("idipmap: " + idIPMap.get(ID));
 		// System.out.println("neighbors: " + neighbors.get(idIPMap.get(ID)));
+		// System.out.println("client: " + clientServers.get(idIPMap.get(ID)));
 		SocketContainer sc = neighbors.get(idIPMap.get(ID));
 		if (sc == null) {
 			sc = clientServers.get(idIPMap.get(ID));
 		}
-		synchronized (sc) {
-			try {
-				// System.out.println(":::ID::: " + ID);
-				if (sc != null) {
+		if (sc != null) {
+			synchronized (sc) {
+				try {
+					// System.out.println(":::ID::: " + ID);
 					sc.oos.writeObject(m);
-				} else {
-					logger.error("Message not sent.. neighbor with ID: " + ID + "not found.");
-					System.out.println("Message not sent.. neighbor with ID: " + ID + "not found.");
+				} catch (IOException e) {
+					return false;
 				}
-			} catch (IOException e) {
-				return false;
+				return true;
 			}
-			return true;
+		} else {
+			logger.error("Message not sent.. neighbor with ID: " + ID + "not found.");
+			// System.out.println("Message not sent.. neighbor with ID: " + ID +
+			// "not found.");
 		}
+		return false;
 	}
 
 	@SuppressWarnings("rawtypes")

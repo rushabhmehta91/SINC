@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import caching.Content;
+import caching.ContentPacket;
 import overlay.Link;
 import packetObjects.DataObj;
 import packetObjects.GenericPacketObj;
@@ -56,11 +57,11 @@ public class ProcessData extends Thread {
 		boolean copyFlag = false;
 		if (intrestObj != null) {
 			contentName = intrestObj.getContentName();
-			Content requestedContent = Server.serveRequest(contentName);
+			ContentPacket requestedContent = Server.serveRequest(contentName);
 			if (requestedContent != null) {
 				try {
-					Server.updateScoreOnIterface(requestedContent, receivedFromNode);
-					if (Server.shouldCopy(requestedContent, receivedFromNode)) {
+					Server.updateScoreOnIterface(requestedContent.getContent(), receivedFromNode);
+					if (Server.shouldCopy(requestedContent.getContent(), receivedFromNode)) {
 						copyFlag = true;
 					}
 				} catch (Exception e) {

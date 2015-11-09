@@ -3,6 +3,7 @@ package packetObjects;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -29,11 +30,16 @@ import org.apache.log4j.Logger;
  */
 public class DataObj implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String contentName;
 	String originRouter;
 	byte flag;
 	Object data;
 	Object originalPacket;
+	 private ArrayList<String> path;
 	byte cacheFlag;
 	boolean lastChunk;
 	String type = "route";
@@ -51,7 +57,7 @@ public class DataObj implements Serializable{
 	 * @param lastChunk
 	 */
 	public DataObj(String contentName, String originRouter, 
-			byte flag, String data, Object originalPacket, 
+			byte flag, String data, ArrayList<String> path, Object originalPacket,
 			byte cacheFlag, boolean lastChunk){
 
 		this.contentName = contentName;
@@ -64,6 +70,7 @@ public class DataObj implements Serializable{
 		}
 		this.flag = flag;
 		this.data = data;
+		this.path = path;
 		this.originalPacket = originalPacket;
 		this.cacheFlag = cacheFlag;
 		this.lastChunk = lastChunk;
@@ -78,7 +85,7 @@ public class DataObj implements Serializable{
 	 * @param cacheFlag
 	 * @param lastChunk
 	 */
-	public DataObj(String contentName, String originRouter, byte flag, Object data, byte cacheFlag, boolean lastChunk){
+	public DataObj(String contentName, String originRouter, byte flag, Object data,  ArrayList<String> path,  byte cacheFlag, boolean lastChunk){
 		this.contentName = contentName;
 		this.originRouter = originRouter;
 		if(flag > 2){
@@ -89,6 +96,7 @@ public class DataObj implements Serializable{
 		}
 		this.flag = flag;
 		this.data = data;
+		this.path = path;
 		this.originalPacket = "";
 		this.cacheFlag = cacheFlag;
 		this.lastChunk = lastChunk;
@@ -117,6 +125,10 @@ public class DataObj implements Serializable{
 		this.cacheFlag = cacheFlag;
 		this.lastChunk = lastChunk;
 
+	}
+
+	public DataObj() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -280,6 +292,17 @@ public class DataObj implements Serializable{
 	
 	public String getAction() {
 	    return action;
+	}
+
+	public ArrayList<String> getPath() {
+		return path;
+	}
+
+	public void setPath(ArrayList<String> path) {
+		this.path = path;
+	}
+	public void aadToPath(String node) {
+		path.add(node);
 	}
 
 

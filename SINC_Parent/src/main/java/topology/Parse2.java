@@ -3,6 +3,9 @@ package topology;
 import packetObjects.DataObj;
 import packetObjects.IntrestObj;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -74,8 +77,12 @@ public class Parse2 {
 
 		JsonElement jsonLastChunkElement = jsonObject.get("lastChunk");
 		boolean lastChunk = jsonLastChunkElement.getAsBoolean();
+		
+		JsonElement jsonPathElement = jsonObject.get("path");
+		String pathString = jsonLastChunkElement.getAsString();
+		ArrayList<String> path = new ArrayList<String>(Arrays.asList(pathString.split(",")));
 
-		DataObj dataInfo = new DataObj(contentName, originRouter, flag, data, originalPacket, cacheFlag, lastChunk);
+		DataObj dataInfo = new DataObj(contentName, originRouter, flag, data, path, originalPacket, cacheFlag, lastChunk);
 		return dataInfo; 
 	}
 

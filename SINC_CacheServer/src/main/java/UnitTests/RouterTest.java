@@ -3,6 +3,7 @@ package UnitTests;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import overlay.Peer;
 import packetObjects.DataObj;
 import packetObjects.IntrestObj;
 import packetObjects.LinkObj;
@@ -488,7 +489,9 @@ public class RouterTest implements Runnable{
 		//System.out.println("added to general q");
 	}
 	public void dataPacket(String contentName, String originRouter, byte flag, String data, byte cacheFlag, boolean lastChunk, String fromNode){
-		DataObj dataObj = new DataObj(contentName, originRouter, flag, data, cacheFlag, lastChunk);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj(contentName, originRouter, flag, data, path, cacheFlag, lastChunk);
 		sendPacket.createDataPacket(dataObj);
 		PacketObj packetObj1 = new PacketObj(dataObj.getOriginalPacket(), fromNode, false);
 		packetQueue2.addToGeneralQueue(packetObj1);
@@ -507,8 +510,9 @@ public class RouterTest implements Runnable{
 		ModifyNodeObj modifyNodeObj = new ModifyNodeObj(advertiser, neighbors, msgID );
 		//sendPacket.createModifyNodePacket(modifyNodeObj);
 		sendPacket.createNeighborResponsePacket(modifyNodeObj);
-
-		DataObj dataObj = new DataObj(originRouter, originRouter, flag, modifyNodeObj.getOriginalPacket(), cacheFlag, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj(originRouter, originRouter, flag, modifyNodeObj.getOriginalPacket(), path, cacheFlag, true);
 		sendPacket.createDataPacket(dataObj);
 		PacketObj packetObj1 = new PacketObj(dataObj.getOriginalPacket(), fromNode, false);
 		packetQueue2.addToGeneralQueue(packetObj1);
@@ -520,8 +524,9 @@ public class RouterTest implements Runnable{
 		PrefixListObj prefixListObj3 = new PrefixListObj(prefixList, advertiser, addRemove, msgID);
 		//sendPacket.createPrefixListPacket(prefixListObj3);
 		sendPacket.createPrefixResponsePacket(prefixListObj3);
-
-		DataObj dataObj = new DataObj(originRouter, originRouter, flag, prefixListObj3.getOriginalPacket(), cacheFlag, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj(originRouter, originRouter, flag, prefixListObj3.getOriginalPacket(), path, cacheFlag, true);
 		sendPacket.createDataPacket(dataObj);
 		PacketObj packetObj1 = new PacketObj(dataObj.getOriginalPacket(), fromNode, false);
 		packetQueue2.addToGeneralQueue(packetObj1);

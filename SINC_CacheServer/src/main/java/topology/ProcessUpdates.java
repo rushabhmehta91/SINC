@@ -3,6 +3,7 @@ package topology;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import overlay.Peer;
 import packetObjects.AddNodeObj;
 import packetObjects.DataObj;
 import packetObjects.IntrestObj;
@@ -56,7 +57,7 @@ public class ProcessUpdates {
 
 			//add the node to the graph
 			addNode(new AddNodeObj(linkObj.getNeighboringNode()));
-
+			
 			//add new node name to prefix hash map
 			fib.addPrefixToFIB(linkObj.getNeighboringNode(), linkObj.getNeighboringNode());
 
@@ -150,7 +151,7 @@ public class ProcessUpdates {
 
 			//this will add the clients name to the clients prefix list
 			directlyConnectedNodes.addDirectlyConnectedClient(linkObj.getNeighboringNode());
-
+	
 			//add its name as a prefix to the FIB
 			fib.addPrefixToFIB(linkObj.getNeighboringNode(), linkObj.getNeighboringNode());
 
@@ -286,10 +287,11 @@ public class ProcessUpdates {
 		//for each prefix in the list try to add it 
 		for(int i = 0; i < prefixListObj.getPrefixListLength(); i++){
 
-//			System.out.println("in for loop");
+			System.out.println("in for loop");
+			System.out.println(prefixList.get(i));
 			//try to add the prefix, if the prefix and advertiser already exist, it will return false, else it will be added
 			if(fib.addPrefixToFIB(prefixList.get(i), prefixListObj.getAdvertiser()) == true){
-//				System.out.println("added the prefix to fib");
+				System.out.println("added the prefix to fib");
 				//add the prefix to the clients list of prefixes 
 				directlyConnectedNodes.getDirectlyConnectedClient(prefixListObj.getAdvertiser()).addPrefix(prefixList.get(i));
 			}
@@ -317,7 +319,7 @@ public class ProcessUpdates {
 
 		//remove the prefix from the fib, this will return false if the prefix or advertiser does not exist
 		if(fib.removePrefixFromFIB(prefixObj.getPrefixName(), prefixObj.getAdvertiser()) == true){
-
+			
 			//remove the prefix from the client list
 			directlyConnectedNodes.getDirectlyConnectedClient(prefixObj.getAdvertiser()).removePrefix(prefixObj.getPrefixName());
 		}
@@ -576,10 +578,13 @@ public class ProcessUpdates {
 		PrefixListObj prefixListObj = getMyDirectlyConnectedPrefixes();
 
 		byte b = 0;
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
 		DataObj dataObj = new DataObj(neighborRequestObj.getContentName(), 
 				neighborRequestObj.getOriginRouter(),
 				b, 
 				modifyNodeObj.getOriginalPacket(), 
+				path,
 				"",
 				b,
 				true);

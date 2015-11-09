@@ -10,6 +10,7 @@ import packetObjects.DataObj;
 import packetObjects.IntrestObj;
 import packetObjects.PITEntry;
 import caching.Content;
+import caching.ContentPacket;
 import caching.ContentStore;
 import overlay.Peer;
 
@@ -76,14 +77,14 @@ public class ProcessRoutingPackets {
 
 		if (intrestObj != null) {
 			contentName = intrestObj.getContentName();
-			Content requestedContent = ContentStore.serveRequest(contentName);
+			ContentPacket requestedContent = ContentStore.serveRequest(contentName);
 			if (requestedContent != null) {
 				try {
-					ContentStore.updateScoreOnIterface(requestedContent, receivedFromNode);
-					if (ContentStore.shouldCopy(requestedContent, receivedFromNode)) {
+					ContentStore.updateScoreOnIterface(requestedContent.getContent(), receivedFromNode);
+					if (ContentStore.shouldCopy(requestedContent.getContent(), receivedFromNode)) {
 						copyFlag = true;
 					}
-					if (ContentStore.shouldDelete(requestedContent)) {
+					if (ContentStore.shouldDelete(requestedContent.getContent())) {
 						deleteFlag = true;
 					}
 				} catch (Exception e) {
@@ -93,7 +94,7 @@ public class ProcessRoutingPackets {
 				}
 				ContentStore.sendDataObj(requestedContent, intrestObj.getOriginRouterName(), receivedFromNode, copyFlag);
 				if (deleteFlag) {
-					ContentStore.deleteContent(requestedContent);
+					ContentStore.deleteContent(requestedContent.getContent());
 				}
 				return;
 			}
@@ -202,18 +203,16 @@ public class ProcessRoutingPackets {
 
 		//check the pit
 		if(pit.doesEntryExist(dataObj.getContentName()) ==  true){
-
+			System.out.println("processData0");
 			//0
 			//check the cs flag
 			if (dataObj != null && dataObj.getCacheFlag() == 2) {
-				String content = (String) dataObj.getData();
-				logger.info(content);
-				System.out.println(content);
-				ContentStore.incomingContent(content, recievedFromNode);
-				logger.info("Content with name " + content + "is placed in cached");
-				System.out.println("Content with name " + content + "is placed in cached");
+				ContentStore.incomingContent(dataObj, recievedFromNode);
+				logger.info("Content with name " + dataObj.getContentName() + "is placed in cached");
+				System.out.println("Content with name " + dataObj.getContentName() + "is placed in cached");
 				dataObj.setCacheFlag((byte) 1);
-				sendPacket.createDataPacket(dataObj);
+				dataObj.aadToPath(Peer.ID);
+				//sendPacket.createDataPacket(dataObj);
 
 			}
 
@@ -237,7 +236,9 @@ public class ProcessRoutingPackets {
 				if((nodeRepo.HMdoesNodeExist(requesters.get(i)) == true)){
 
 					//forward the packet to each of the requester
-					sendPacket.forwardPacket(dataObj.getOriginalPacket(), requesters.get(i));
+					System.out.println("log");
+					dataObj.aadToPath(Peer.ID);
+					sendPacket.forwardPacket(dataObj, requesters.get(i));
 
 				}else{
 
@@ -256,11 +257,10 @@ public class ProcessRoutingPackets {
 
 			ArrayList<String> clientRequesters = pit.getClientRequesters(dataObj.getContentName()).getClientRequesters();
 			for(int i = 0; i < clientRequesters.size(); i++){
-				logger.info("in for loop");
-				System.out.println("in for loop");
 				if(directlyConnectedNodes.doesDirectlyConnectedClientExist(clientRequesters.get(i)) == true){
 
 					//forward the packet to each of the client requesters
+					dataObj.aadToPath(Peer.ID);
 					sendPacket.forwardPacket(dataObj, clientRequesters.get(i));
 
 				}
@@ -307,6 +307,7 @@ public class ProcessRoutingPackets {
 				nextHop = nodeRepo.HMgetNode(dataObj.getOriginRouterName()).getOriginNextHop();
 				if(nodeRepo.HMdoesNodeExist(nextHop) == true){
 					//send the packet
+					dataObj.aadToPath(Peer.ID);
 					sendPacket.forwardPacket(dataObj.getOriginalPacket(), nextHop);
 				}else{
 					//dont send the packet, drop the packet
@@ -353,6 +354,7 @@ public class ProcessRoutingPackets {
 			for(int i = 0; i < clientRequesters.size(); i++){
 				if(directlyConnectedNodes.doesDirectlyConnectedClientExist(clientRequesters.get(i)) == true){
 					dataObj.setFlag((byte)0);
+					dataObj.aadToPath(Peer.ID);
 					sendPacket.createDataPacket(dataObj);
 					sendPacket.forwardPacket(dataObj.getOriginalPacket(), requesters.get(i));
 				}
@@ -364,6 +366,7 @@ public class ProcessRoutingPackets {
 			String nextHop = fib.searchFIB(dataObj.getContentName());
 			//sendPacket
 			dataObj.setFlag((byte)2);
+			dataObj.aadToPath(Peer.ID);
 			sendPacket.createDataPacket(dataObj);
 			sendPacket.forwardPacket(dataObj.getOriginalPacket(), nextHop);
 
@@ -381,8 +384,10 @@ public class ProcessRoutingPackets {
 	public void preocessPingRequest(IntrestObj intrestObj){
 		byte b = 0;
 		String data = nodeRepo.getThisMachinesName() + "/ping";
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
 		DataObj dataObj = new DataObj(intrestObj.getContentName(), 
-				intrestObj.getOriginRouterName(), b, data, b, true);
+				intrestObj.getOriginRouterName(), b, data, path, b, true);
 
 		sendPacket.createDataPacket(dataObj);
 		sendPacket.forwardPacket(dataObj.getOriginalPacket(), recievedFromNode);

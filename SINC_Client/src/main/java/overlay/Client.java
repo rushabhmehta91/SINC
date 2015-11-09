@@ -114,20 +114,20 @@ public class Client {
 			
             File contentList = new File("contentList.txt");
             FileInputStream fis = new FileInputStream(contentList);
-            Scanner sc = new Scanner(fis);
+            Scanner sc = new Scanner(System.in);
             
-            if (noReqContent == 0) {
-                while (sc.hasNext()) {
+//            if (noReqContent == 0) {
+                while (true) {
                     String msg = sc.nextLine();
                     System.out.println("Requesting: " + msg);
                     IntrestObj intrst = new IntrestObj(msg, "", 1);
                     sendPacketObj.createIntrestPacket(intrst);
                     sendPacketObj.forwardPacket(intrst.getOriginalPacket());
                     rtt.put(msg, System.currentTimeMillis());
-                    noReqContent++;
-                }
+//                    noReqContent++;
+//                }
             }
-			sc.close();
+			//sc.close();
 			
 //			System.out.println("Enter content to be fetched(EXIT to exit): ");
 //			String msg = s.nextLine();

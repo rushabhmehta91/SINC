@@ -188,8 +188,9 @@ public class StartServer {
         try {
             file.write(jsonString.toJSONString());
             System.out.println("Successfully Copied JSON Object to File...");
-            //System.out.println("\nJSON Object: " + jsonString);
- 
+            System.out.println();
+            System.out.println("\nJSON Object: " + jsonString);
+            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
  

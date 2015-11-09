@@ -2,7 +2,6 @@ package overlay;
 
 import overlay.Message;
 import overlay.NodeDetails;
-import overlay.Link;
 import overlay.SocketContainer;
 import overlay.VisualizeMessage;
 import packetObjects.DataObj;
@@ -27,12 +26,14 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import caching.Content;
-import caching.ContentStore;
+import caching.ContentPacket;
+
+
 
 /**
  * Created by rushabhmehta91 on 5/4/15.
  */
-public class Server implements Serializable {
+public class Server implements Serializable  {
 	public static HashMap<String, SocketContainer> isConnected;
 	public static ArrayList<String> deadCacheNodes;
 	public static HashMap<String, SocketContainer> listOfConnection;
@@ -59,10 +60,6 @@ public class Server implements Serializable {
 
 	static {
 		storeList = new ArrayList<String>();
-		// storeList.add("/directory/subDirectory/file1");
-		// storeList.add("/directory/subDirectory/file2");
-		// storeList.add("/directory/subDirectory/file3");
-		// storeList.add("/directory/subDirectory/file4");
 		store = new HashMap<String, Content>();
 		listOfConnection = new HashMap<String, SocketContainer>();
 		deadCacheNodes = new ArrayList<String>();
@@ -70,7 +67,6 @@ public class Server implements Serializable {
 	}
 
 	public static void main(String args[]) {
-		// ServerLFS s1 = new ServerLFS();
 		try {
 			serverNameID = InetAddress.getLocalHost().getHostAddress();
 			ID=generateID(getIP(serverNameID))+"";
@@ -205,10 +201,10 @@ public class Server implements Serializable {
 		return true;
 	}
 
-	public static Content serveRequest(String fileName) {
-		Content c;
+	public static ContentPacket serveRequest(String fileName) {
+		ContentPacket c;
 		DataBytes dataBytes = null;
-		byte[] bytesArr;
+		byte[] bytesArr = null;
 		System.out.println("Serving request:" + fileName);
 		if (storeList.contains(fileName)) {
 			logger.info("Request content found!!!!!");
@@ -227,7 +223,8 @@ public class Server implements Serializable {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-			c = new Content(fileName, new ArrayList<String>(), 200, dataBytes);
+			
+			c = new ContentPacket(store.get(fileName), bytesArr);
 			return c;
 
 		} else {
@@ -238,7 +235,7 @@ public class Server implements Serializable {
 
 	}
 
-	public static void sendDataObj(Content sendingContent, String originRouter, String receivedFromNode,
+	public static void sendDataObj(ContentPacket sendingContent, String originRouter, String receivedFromNode,
 			boolean copyFlag) {
 		logger.info("Sending requested content");
 		System.out.println("Sending requested content");
@@ -248,10 +245,12 @@ public class Server implements Serializable {
 		} else {
 			copyFlagValue = (byte) 1;
 		}
+		ArrayList<String> path=new ArrayList<>();
+		path.add(ID);
 		// System.out.println(convertContentToString(sendingContent));
-		DataObj dataObj = new DataObj(sendingContent.getContentName(), originRouter, (byte) 0, sendingContent.getContentCache(), copyFlagValue, true);
+		DataObj dataObj = new DataObj(sendingContent.getContent().getContentName(), originRouter, (byte) 0, sendingContent, path, copyFlagValue, true);
 //		sendPacketObj.createDataPacket(dataObj);
-		
+		//DataObj dataObj = new DataObj();	
 		sendPacketObj.forwardPacket(dataObj, receivedFromNode);
 	}
 
@@ -410,13 +409,21 @@ public class Server implements Serializable {
 
 		private static void fillStore() {
 			String contentName;
-			File files = new File("cache");
-			String[] filesList = files.list();
-			for ( String s : filesList ) {
-				contentName = s;
-				System.out.println("Adding: " + contentName);
-				storeList.add(contentName);			
-			}
+			long contentSize;
+			File folder = new File("cache");
+			File[] listOfFiles = folder.listFiles();
+
+			    for (int i = 0; i < listOfFiles.length; i++) {
+			      if (listOfFiles[i].isFile()) {
+			    	  contentName = listOfFiles[i].getName();
+			    	  contentSize = listOfFiles[i].length();
+			    	  ArrayList<String> trail=new ArrayList<String>();
+			    	  trail.add(ID);
+			    	  Content c = new Content(contentName, trail, contentSize);
+			    	  addContentToStore(c);
+			      } 
+			    }
+				
 			
 //			Content c1 = new Content("firstContent", new ArrayList<String>(), 200, "updatedSecondContent1");
 //			Content c2 = new Content("secondContent", new ArrayList<String>(), 200, "updatedSecondContent2");
@@ -523,12 +530,9 @@ public class Server implements Serializable {
 					
 					Socket cacheServer = null;
 					try {
-						System.out.println("creating socket");
 						cacheServer = new Socket(cacheServerAddress, 43125);
-						System.out.println("socket created");
 						ois = new ObjectInputStream(cacheServer.getInputStream());
 						oos = new ObjectOutputStream(cacheServer.getOutputStream());
-						System.out.println("i/o");
 						Message<String> joinMessage = new Message<String>(400); // handle
 						// in
 						// Peer
@@ -550,9 +554,14 @@ public class Server implements Serializable {
 					ID = generateID(getIP(cacheServerAddress)) + "";
 					connected = true;
 					// oos.writeObject("joining client");
-					System.out.println("oos: " + oos);
 					isConnected.put(cacheServerAddress, new SocketContainer(cacheServer, ois, oos, link));
 					// advertise(storeList, cacheServerAddress);
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					advertise(storeList, Server.generateID(Server.getIP(cacheServerAddress)) + "");
 				} catch (UnknownHostException e) {
 					logger.error("Connection error.. Please try again.." + e.getMessage());
@@ -608,7 +617,7 @@ public class Server implements Serializable {
 
 	/// only required for content server
 
-	private void addContentToStore(Content content) {
+	private static void addContentToStore(Content content) {
 		// long size = value.length();
 		// ArrayList<Integer> trail = new ArrayList<Integer>();
 		// trail.add(-1);
@@ -630,7 +639,7 @@ public class Server implements Serializable {
 				// System.out.print("Enter prefix to be advertised: ");
 				String str = s.nextLine();
 				try {
-					advertiseNewlyAdded(new Content(str, null, 0, null));
+					advertiseNewlyAdded(new Content(str, null, 0));
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

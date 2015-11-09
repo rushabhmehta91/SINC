@@ -197,7 +197,9 @@ public class MainEntryPoint implements Runnable{
 	public void dataPacket(String contentName, String originRouter, String fromNode){
 		CacheServerSendPacket sendPacket = new CacheServerSendPacket();
 		byte b = 0;
-		DataObj dataObj = new DataObj(contentName, originRouter, b, "data data", b, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj(contentName, originRouter, b, "data data", path,b, true);
 		sendPacket.createDataPacket(dataObj);
 		PacketObj packetObj1 = new PacketObj(dataObj.getOriginalPacket(), fromNode, false);
 		packetQueue2.addToGeneralQueue(packetObj1);

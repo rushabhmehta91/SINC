@@ -3,6 +3,7 @@ package UnitTests;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import overlay.Peer;
 import packetObjects.DataObj;
 import packetObjects.LinkObj;
 import packetObjects.ModifyNodeObj;
@@ -330,7 +331,9 @@ public class UpdateSimulation {
 		System.out.println("The pit entry for this packet has D as a requester");
 		//forward data packet
 		byte b = 0;
-		DataObj dataObj = new DataObj("prefix5B/video/one", "D", b, "some data", b, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj("prefix5B/video/one", "D", b, "some data", path, b, true);
 		sendPacket.createDataPacket(dataObj);
 		processRouting.processData0(dataObj);
 
@@ -351,7 +354,9 @@ public class UpdateSimulation {
 		//forward data packet passing it towards the server 
 		byte b = 1;
 		byte bb = 0;
-		DataObj dataObj = new DataObj("prefix5B/video", "A", b, "some data", bb, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj("prefix5B/video", "A", b, "some data", path, bb, true);
 		processRouting.processData1(dataObj);
 
 	}
@@ -361,7 +366,9 @@ public class UpdateSimulation {
 		//forward data packet passing it towards the server 
 		byte b = 2;
 		byte bb = 0;
-		DataObj dataObj = new DataObj("prefix5B/video", "A", b, "some data", bb, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj("prefix5B/video", "A", b, "some data", path, bb, true);
 		processRouting.processData2(dataObj);
 	}
 
@@ -369,7 +376,9 @@ public class UpdateSimulation {
 		System.out.println("-dataPacketNoPITEntry-");
 		//receive data packet with no PIT entry 
 		byte b = 0;
-		DataObj dataObj = new DataObj("prefix5B/video", "F", b, "some data", b, true);
+		ArrayList<String> path=new ArrayList<>();
+		path.add(Peer.ID);
+		DataObj dataObj = new DataObj("prefix5B/video", "F", b, "some data", path, b, true);
 		processRouting.processData0(dataObj);
 
 	}

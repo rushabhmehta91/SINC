@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import caching.ContentPacket;
 import packetObjects.DataObj;
 import packetObjects.GenericPacketObj;
 
@@ -44,16 +45,18 @@ public class ProcessData extends Thread {
 	}
 
 	public void processDataObj(DataObj dataObj) {
-	    DataBytes dataBytes = null;
+	    byte[] dataBytes = null;
 		String contentName = null;
+		ContentPacket cp = null;
 		if (dataObj != null) {
 			contentName = dataObj.getContentName();
 			try {
-			    dataBytes = (DataBytes) dataObj.getData();
+				cp = (ContentPacket) dataObj.getData();
+			    dataBytes =  (byte[]) cp.getData();
 			    System.out.println("writing content file!!");
 			    File f = new File(contentName);
 			    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
-			    bos.write(dataBytes.data);
+			    bos.write(dataBytes);
 			    bos.close();
 			} catch (Exception e) {
 				e.printStackTrace();
