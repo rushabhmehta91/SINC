@@ -199,6 +199,11 @@ public class ContentStore {
 	public static boolean incomingContent(DataObj packet, String recievedFromNode) {
 		logger.info("incoming content received");
 		System.out.println("incoming content received");
+		File cacheDir = new File("cache");
+		if ( !cacheDir.exists() ) {
+		    cacheDir.mkdir();
+		}		    
+
 		ContentPacket cp = (ContentPacket) packet.getData();
 		if (cp.getContent().getSizeInBytes() <= r.freeMemory()) {
 			return place(cp, recievedFromNode);
