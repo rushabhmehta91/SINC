@@ -1,6 +1,5 @@
 package caching;
 
-import overlay.DataBytes;
 import overlay.Peer;
 import packetObjects.DataObj;
 import packetObjects.PrefixListObj;
@@ -49,8 +48,7 @@ public class ContentStore {
 
 	public static ContentPacket serveRequest(String fileName) {
 		ContentPacket c;
-		DataBytes dataBytes = null;
-		byte[] bytesArr;
+		byte[] bytesArr = null;
 		System.out.println("Serving request:" + fileName);
 		if (storeList.contains(fileName)) {
 			logger.info("Request content found!!!!!");
@@ -61,7 +59,6 @@ public class ContentStore {
 			File f = new File("cache/" + fileName);
 			try {
                 bytesArr = IOUtils.toByteArray(new FileInputStream(f));
-                dataBytes = new DataBytes(bytesArr);
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -70,7 +67,7 @@ public class ContentStore {
                 e.printStackTrace();
             }
 			
-			c = new ContentPacket(store.get(fileName), dataBytes);
+			c = new ContentPacket(store.get(fileName), bytesArr);
 			return c;
 
 		} else {

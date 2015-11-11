@@ -66,7 +66,9 @@ public class ProcessData extends Thread {
 		//used for rtt, can be removed
 		if(rtt.containsKey(contentName) == true){
 			logger.info("rtt mili seconds: " + (System.currentTimeMillis() - rtt.get(contentName)));
+			logger.info("Path: " + dataObj.getPath().toString());
 			System.out.println("rtt mili seconds: " + (System.currentTimeMillis() - rtt.get(contentName)) );
+			System.out.println("Path: " + dataObj.getPath().toString());
 		}
 		logger.info("Content name: " + contentName);
 		System.out.println("Content name: " + contentName);
