@@ -33,13 +33,13 @@ public class CacheServerLink extends Link {
 		Message m = null;
 		int attempt = 0;
 		logger.info("Started listening on link to " + connectedTo);
-		System.out.println("Started listening on link to " + connectedTo);
+		logger.info("Started listening on link to " + connectedTo);
 		while (running) {
 			try {
 				m = (Message) ois.readObject();
 				// System.out.print(System.currentTimeMillis()
 				// + "Message received from: " + connectedTo);
-				// System.out.println("\tMessage type: " + m.type);
+				// logger.info("\tMessage type: " + m.type);
 				attempt = 0;
 				// handle updates if not previously seen
 				if (!Peer.requests.contains(m.requestNo)) {
@@ -50,7 +50,7 @@ public class CacheServerLink extends Link {
 					handleUpdate(m);
 				} else {
 					logger.info("Packet discarded(repeated request no)");
-					System.out.println("Packet discarded(repeated request no)");
+					logger.info("Packet discarded(repeated request no)");
 				}
 			} catch (ClassNotFoundException e) {
 				logger.error(e.getMessage());
@@ -85,7 +85,7 @@ public class CacheServerLink extends Link {
 						} catch (IOException e) {
 							logger.error("Error when closing "
 									+ "client or server socket" + e.getMessage());
-							System.out.println("Error when closing "
+							logger.info("Error when closing "
 									+ "client or server socket" + e);
 //							e.printStackTrace();
 						}
@@ -96,7 +96,7 @@ public class CacheServerLink extends Link {
 							Peer.neighbors.remove(connectedTo).socket.close();
 						} catch (IOException e) {
 							
-							System.out.println("Error when closing "
+							logger.info("Error when closing "
 									+ "cache server socket");
 							logger.error("Error when closing "
 									+ "cache server socket "+e.getMessage());
@@ -118,7 +118,7 @@ public class CacheServerLink extends Link {
 			}
 		}
 		logger.warn("Link to " + connectedTo + " dropped...");
-		System.out.println("Link to " + connectedTo + " dropped...");
+		logger.info("Link to " + connectedTo + " dropped...");
 	}
 
 	public void handleUpdate(Message m) throws IOException,
@@ -131,7 +131,7 @@ public class CacheServerLink extends Link {
 			Peer.neighbors.remove(connectedTo);
 			Peer.routing.removeLink(Peer.generateID(connectedTo) + "", 0);
 			logger.warn("Removed " + connectedTo + " as neighbor");
-			System.out.println("Removed " + connectedTo + " as neighbor");
+			logger.info("Removed " + connectedTo + " as neighbor");
 		}
 		// poll packet
 		else if (m.type == 100) {
@@ -195,11 +195,11 @@ public class CacheServerLink extends Link {
 				logger.error("Instance of message with type 7: "
 						+ m.packet.getClass());
 				e.printStackTrace();
-				System.out.println("Instance of message with type 7: "
+				logger.info("Instance of message with type 7: "
 						+ m.packet.getClass());
 				logger.error("inside message of type 7: "
 						+ ((Message) m.packet).packet);
-				System.out.println("inside message of type 7: "
+				logger.info("inside message of type 7: "
 						+ ((Message) m.packet).packet);
 			}
 		}

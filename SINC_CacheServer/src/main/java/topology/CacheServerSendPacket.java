@@ -328,13 +328,13 @@ public class CacheServerSendPacket extends SendPacket{
 		Message<Object> packetMessage = new Message<Object>(7, packet);
 		
 		Peer.sendMessage(nextHop, packetMessage);
-		System.out.println("-------------------------------------------");
-		System.out.println("Forward packet next hop"+ nextHop);
-//		System.out.println("nextHop: " + nextHop);
+		logger.info("-------------------------------------------");
 		logger.info("Forward packet next hop"+ nextHop);
-//		System.out.println("packet: " + packet);
-//		System.out.println("nextHop: " + nextHop);
-		System.out.println("-------------------------------------------");
+//		logger.info("nextHop: " + nextHop);
+		logger.info("Forward packet next hop"+ nextHop);
+//		logger.info("packet: " + packet);
+//		logger.info("nextHop: " + nextHop);
+		logger.info("-------------------------------------------");
 	}
 
 	/**
@@ -349,10 +349,10 @@ public class CacheServerSendPacket extends SendPacket{
 
 		Message<String> packetMessage = new Message<String>(7, packet);
 		Peer.sendMessageToAllBut("", packetMessage);
-		//		System.out.println("    -Broadcast-");
-		//		System.out.println("packet: " + packet);
-		//		System.out.println("-------------------------------------------");
-		//		System.out.println("");
+		//		logger.info("    -Broadcast-");
+		//		logger.info("packet: " + packet);
+		//		logger.info("-------------------------------------------");
+		//		logger.info("");
 	}
 
 	/**
@@ -370,11 +370,11 @@ public class CacheServerSendPacket extends SendPacket{
 		// the function
 		Message<String> packetMessage = new Message<String>(7, packet);
 		Peer.sendMessageToAllBut(doNotSendToNode, packetMessage);
-		//		System.out.println("    -ForwardUpdate do not send node provided-");
-		//		System.out.println("packet: " + packet);
-		//		System.out.println("doNotSendToNode: " + doNotSendToNode);
-		//		System.out.println("-------------------------------------------");
-		//		System.out.println("");
+		//		logger.info("    -ForwardUpdate do not send node provided-");
+		//		logger.info("packet: " + packet);
+		//		logger.info("doNotSendToNode: " + doNotSendToNode);
+		//		logger.info("-------------------------------------------");
+		//		logger.info("");
 		//boolean true, send to routers 
 	}
 
@@ -388,10 +388,10 @@ public class CacheServerSendPacket extends SendPacket{
 		// this forwards the packet to all routers only
 		Message<String> packetMessage = new Message<String>(7, packet);
 		Peer.sendMessageToAllBut("", packetMessage);
-		//		System.out.println("    -Forward to all routers no hops provided-");
-		//		System.out.println("packet: " + packet);
-		//		System.out.println("-------------------------------------------");
-		//		System.out.println("");
+		//		logger.info("    -Forward to all routers no hops provided-");
+		//		logger.info("packet: " + packet);
+		//		logger.info("-------------------------------------------");
+		//		logger.info("");
 		//boolean
 	}
 

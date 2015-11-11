@@ -81,7 +81,7 @@ public class UpdateQueueHandler implements Runnable {
 					thread.join();
 				} catch (InterruptedException e) {
 					logger.error(e.getMessage());
-					System.out.println(e);
+					logger.info(e);
 //					e.printStackTrace();
 				}
 

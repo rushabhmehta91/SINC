@@ -56,7 +56,7 @@ public class MsgIDEntryDiscard implements Runnable{
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 				// TODO Auto-generated catch block
 //				e.printStackTrace();
 			}

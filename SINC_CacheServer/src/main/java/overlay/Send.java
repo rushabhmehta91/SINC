@@ -31,7 +31,7 @@ public class Send extends Thread {
 				String[] parts = line.split("=");
 				if (Peer.neighbors.containsKey(parts[0])) {
 					logger.info("Sending msg to " + parts[0] + "...");
-					System.out.println("Sending msg to " + parts[0] + "...");
+					logger.info("Sending msg to " + parts[0] + "...");
 					oos = Peer.neighbors.get(parts[0]).oos;
 				}
 			} catch (Exception e) {

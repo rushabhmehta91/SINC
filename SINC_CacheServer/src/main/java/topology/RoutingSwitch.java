@@ -88,14 +88,14 @@ public class RoutingSwitch implements Runnable{
 			IntrestObj intrestObj = (IntrestObj) genericPacketObj.getObj();
 			String[] contentNameSplit = intrestObj.getContentName().split("/");
 
-//			System.out.println("machine name"+nodeRepo.getThisMachinesName());
+//			logger.info("machine name"+nodeRepo.getThisMachinesName());
 			//if(intrestObj.getContentName().equals(nodeRepo.getThisMachinesName()) == false){
 			if(contentNameSplit[0].equals(nodeRepo.getThisMachinesName()) == false){
 				try {
 					process.processIntrest(intrestObj, this.recievedFromNode);
 				} catch (IOException e) {
 					logger.error(e.getMessage());
-					System.out.println(e);
+					logger.info(e);
 //					e.printStackTrace();
 				}
 			}else{
@@ -159,7 +159,7 @@ public class RoutingSwitch implements Runnable{
 
 				default : 
 					logger.error("data flag set to an incorrect value");
-					System.out.println("data flag set to an incorrect value");
+					logger.info("data flag set to an incorrect value");
 					break;
 				}
 			}else{
@@ -241,7 +241,7 @@ public class RoutingSwitch implements Runnable{
 			break;
 		default : 
 			logger.error("Invalid route action");
-			System.out.println("Invalid route action");
+			logger.info("Invalid route action");
 			break;
 		}
 	}

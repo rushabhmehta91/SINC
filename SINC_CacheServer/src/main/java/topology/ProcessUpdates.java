@@ -3,6 +3,10 @@ package topology;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import caching.ContentStore;
 import overlay.Peer;
 import packetObjects.AddNodeObj;
 import packetObjects.DataObj;
@@ -28,6 +32,7 @@ public class ProcessUpdates {
 	FIB fib;
 	DirectlyConnectedNodes directlyConnectedNodes;
 	Dijkstras dijkstras;
+	private static Logger logger = LogManager.getLogger(ContentStore.class);
 
 	/**
 	 * Constructor
@@ -287,11 +292,11 @@ public class ProcessUpdates {
 		//for each prefix in the list try to add it 
 		for(int i = 0; i < prefixListObj.getPrefixListLength(); i++){
 
-			System.out.println("in for loop");
-			System.out.println(prefixList.get(i));
+			logger.info("in for loop");
+			logger.info(prefixList.get(i));
 			//try to add the prefix, if the prefix and advertiser already exist, it will return false, else it will be added
 			if(fib.addPrefixToFIB(prefixList.get(i), prefixListObj.getAdvertiser()) == true){
-				System.out.println("added the prefix to fib");
+				logger.info("added the prefix to fib");
 				//add the prefix to the clients list of prefixes 
 				directlyConnectedNodes.getDirectlyConnectedClient(prefixListObj.getAdvertiser()).addPrefix(prefixList.get(i));
 			}

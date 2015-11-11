@@ -89,7 +89,7 @@ public class ProcessRoutingPackets {
 					}
 				} catch (Exception e) {
 					logger.error(e.getMessage());
-					System.out.println(e);
+					logger.info(e);
 //					e.printStackTrace();
 				}
 				ContentStore.sendDataObj(requestedContent, intrestObj.getOriginRouterName(), receivedFromNode, copyFlag);
@@ -101,7 +101,7 @@ public class ProcessRoutingPackets {
 
 		}
 		logger.info("Content name: " + contentName);
-		System.out.println("Content name: " + contentName);
+		logger.info("Content name: " + contentName);
 
 
 
@@ -203,13 +203,13 @@ public class ProcessRoutingPackets {
 
 		//check the pit
 		if(pit.doesEntryExist(dataObj.getContentName()) ==  true){
-			System.out.println("processData0");
+			logger.info("processData0");
 			//0
 			//check the cs flag
 			if (dataObj != null && dataObj.getCacheFlag() == 2) {
 				ContentStore.incomingContent(dataObj, recievedFromNode);
 				logger.info("Content with name " + dataObj.getContentName() + "is placed in cached");
-				System.out.println("Content with name " + dataObj.getContentName() + "is placed in cached");
+				logger.info("Content with name " + dataObj.getContentName() + "is placed in cached");
 				dataObj.setCacheFlag((byte) 1);
 				dataObj.aadToPath(Peer.ID);
 				//sendPacket.createDataPacket(dataObj);
@@ -236,7 +236,7 @@ public class ProcessRoutingPackets {
 				if((nodeRepo.HMdoesNodeExist(requesters.get(i)) == true)){
 
 					//forward the packet to each of the requester
-					System.out.println("log");
+					logger.info("log");
 					dataObj.aadToPath(Peer.ID);
 					sendPacket.forwardPacket(dataObj, requesters.get(i));
 
@@ -401,6 +401,6 @@ public class ProcessRoutingPackets {
 	public void processPingReply(DataObj dataObj){
 		//print data portion of data obj
 		logger.info("ping response: " + dataObj.getData());
-		System.out.println("ping response: " + dataObj.getData());
+		logger.info("ping response: " + dataObj.getData());
 	}
 }
