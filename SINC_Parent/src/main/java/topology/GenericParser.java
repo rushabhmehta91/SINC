@@ -50,8 +50,6 @@ public class GenericParser {
 		String type;
 		JsonObject jsonObject = new JsonObject();
 		try{
-		    System.out.println(packetObj.getPacket().getClass());
-		    System.out.println((String)packetObj.getPacket());
 			jsonObject = gson.fromJson((String)packetObj.getPacket(), JsonObject.class);
 			JsonElement jsonTypeElement = jsonObject.get("type");
 			type = jsonTypeElement.getAsString();
@@ -62,7 +60,6 @@ public class GenericParser {
 				isJson = false;
 				DataObj dataObj = (DataObj) packetObj.getPacket();
 				type = dataObj.getType();
-				System.out.println("Satyajeet: " + dataObj.getData().getClass());
 			}catch(Exception e1){
 				type = "dropPacket";
 			}
@@ -75,7 +72,6 @@ public class GenericParser {
 			break;
 
 		default :
-			System.out.println("Invalid packet type");
 			break;
 
 		}
@@ -97,13 +93,11 @@ public class GenericParser {
 		    jsonTypeElement = jsonObject.get("action");
 		    action = jsonTypeElement.getAsString();
 		} else {
-			System.out.println(packetObj.getPacket());
 		    dataObj = (DataObj) packetObj.getPacket();
 		    action = dataObj.getAction();
 		}
 
 		logger.info("Routing action::" + action);
-		System.out.println("Routing action::" + action);
 		switch(action){
 
 		case "intrest" :
@@ -114,8 +108,7 @@ public class GenericParser {
 				//add it to the Update Queue
 				packetQueue2.addToRoutingQueue(gpoIntrest);
 			}catch(Exception e){
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
 
 			}
 			break;
@@ -129,23 +122,20 @@ public class GenericParser {
 	    				//add it to the Update Queue
 	    				packetQueue2.addToRoutingQueue(gpoData);
 	    				logger.info("generic parser added data OBJ to routing queue");
-	    				System.out.println("generic parser added data OBJ to routing queue");
 				    } else {
-				    	System.out.println("data received and forwarding now");
+				    	logger.info("data received and forwarding now");
 				        dataObj = (DataObj) packetObj.getPacket();
 			            GenericPacketObj<DataObj> gpoData= new GenericPacketObj<DataObj>(action, packetObj.getRecievedFromNode(), dataObj);
 
 		            packetQueue2.addToRoutingQueue(gpoData);
 			    }
 			}catch(Exception e){
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
 			}
 			break;
 
 		default :
 			logger.error("Invalid route packet action");
-			System.out.println("Invalid route packet action");
 			break;
 
 		}

@@ -49,10 +49,9 @@ public class ContentStore {
 	public static ContentPacket serveRequest(String fileName) {
 		ContentPacket c;
 		byte[] bytesArr = null;
-		System.out.println("Serving request:" + fileName);
+		logger.info("Serving request: " + fileName);
 		if (storeList.contains(fileName)) {
 			logger.info("Request content found!!!!!");
-			System.out.println("Request content found!!!!!");
 			// return store.get(fileName);
 
 			// put file object in content and return it.
@@ -71,8 +70,7 @@ public class ContentStore {
 			return c;
 
 		} else {
-			logger.warn("Request content not found on server. sending 404");
-			System.out.println("Request content not found on server. sending 404");
+			logger.warn("Request content not found on server.");
 			return null;
 		}
 
@@ -81,7 +79,6 @@ public class ContentStore {
 	public static void sendDataObj(ContentPacket sendingContent, String originRouter, String receivedFromNode,
 			boolean copyFlag) {
 		logger.info("Sending requested content");
-		System.out.println("Sending requested content");
 		byte copyFlagValue;
 		if (copyFlag) {
 			copyFlagValue = (byte) 2;
@@ -90,16 +87,10 @@ public class ContentStore {
 		}
 		ArrayList<String> path=new ArrayList<>();
 		path.add(Peer.ID);
-		// System.out.println(convertContentToString(sendingContent));
 		DataObj dataObj = new DataObj(sendingContent.getContent().getContentName(), originRouter, (byte) 0, sendingContent, path, copyFlagValue, true);
-//		sendPacketObj.createDataPacket(dataObj);
 		sendPacketObj.forwardPacket(dataObj, receivedFromNode);
 	}
 	private static void addContentToStore(Content content) {
-		// long size = value.length();
-		// ArrayList<Integer> trail = new ArrayList<Integer>();
-		// trail.add(-1);
-		// Content contentToBeInserted = new Content(key, trail, size, value);
 		store.put(content.getContentName(), content);
 		storeList.add(content.getContentName());
 		// advertiseNewlyAdded(contentToBeInserted);
@@ -120,8 +111,6 @@ public class ContentStore {
 	 * @throws Exception
 	 */
 	public static void updateScoreOnIterface(Content contentStoreCopy, String interfaceId) throws Exception {
-		logger.info("updating score to " + (contentStoreCopy.listofScoreOnInterfaces.get(interfaceId) - 1));
-		System.out.println("updating score to " + (contentStoreCopy.listofScoreOnInterfaces.get(interfaceId) - 1));
 		if (!contentStoreCopy.listofScoreOnInterfaces.containsKey(interfaceId)) {
 			contentStoreCopy.listofScoreOnInterfaces.put(interfaceId, contentStoreCopy.getMaxNScore());
 		} else {
@@ -132,6 +121,7 @@ public class ContentStore {
 
 	public static boolean shouldCopy(Content contentStoreCopy, String interfaceId) {
 		boolean copyFlag = false;
+		logger.info("N score: "+ contentStoreCopy.listofScoreOnInterfaces.get(interfaceId));
 		if (contentStoreCopy.listofScoreOnInterfaces.get(interfaceId) == 0) {
 			copyFlag = true;
 		}
@@ -161,8 +151,7 @@ public class ContentStore {
 			// serializedObject = new String(buffer);
 			serializedObject = bo.toString("ISO-8859-1");
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			System.out.println(e);
+			logger.error(e.getStackTrace());
 		}
 		return serializedObject;
 	}
@@ -176,8 +165,7 @@ public class ContentStore {
 			ObjectInputStream si = new ObjectInputStream(bi);
 			contentObj = (Content) si.readObject();
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			System.out.println(e);
+			logger.error(e.getStackTrace());
 			// e.printStackTrace();
 		}
 		return contentObj;
@@ -195,7 +183,6 @@ public class ContentStore {
 	 */
 	public static boolean incomingContent(DataObj packet, String recievedFromNode) {
 		logger.info("incoming content received");
-		System.out.println("incoming content received");
 		File cacheDir = new File("cache");
 		if ( !cacheDir.exists() ) {
 		    cacheDir.mkdir();
@@ -236,27 +223,31 @@ public class ContentStore {
 		if (cp != null) {
 			Content c = cp.getContent();
 			contentName = c.getContentName();
+			ArrayList<String> newTrail=c.getTrail();
+			newTrail.add(Peer.ID);
+			Content cNew = new Content(contentName, c.getMaxNScore(), c.getTimeToLive(), newTrail, c.getSizeInBytes());
+			
 			try {
 				dataBytes = (byte[]) cp.getData();
-				System.out.println("writing content file!!");
+				logger.info("writing content file!!");
 				File f = new File("cache/" + contentName);
 				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
 				bos.write(dataBytes);
 				bos.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getStackTrace());
 			}
 			if (!store.containsKey(contentName)) {
-				addContentToStore(c);
+				addContentToStore(cNew);
 				try {
-					advertiseNewlyAdded(c, true);
+					advertiseNewlyAdded(cNew, true);
 				} catch (UnknownHostException e) {
-					e.printStackTrace();
+					logger.error(e.getStackTrace());
 				}
 				return true;
 			} else {
-				if (store.replace(contentName, c) != null) {
+				if (store.replace(contentName, cNew) != null) {
 					return true;
 				} else {
 					return false;
@@ -273,7 +264,7 @@ public class ContentStore {
 		// try {
 		// advertiseNewlyAdded(receivedContent, true);
 		// } catch (UnknownHostException e) {
-		// logger.error(e.getMessage());
+		// logger.error(e.getStackTrace());
 		// System.out.println(e);
 		//// e.printStackTrace();
 		// }
@@ -289,25 +280,24 @@ public class ContentStore {
 
 	}
 
-	private static void advertise(ArrayList<String> contentList, String cacheServerAddress)
-			throws UnknownHostException {
-
-		PrefixListObj list = new PrefixListObj(contentList, Peer.generateID(Peer.getIP(Peer.IP)) + "", true,
-				Peer.generateID(Peer.getIP(Peer.IP)) + System.nanoTime() + "");
-		// sendPacketObj.createPrefixListPacket(list);
-		sendPacketObj.createClientPrefixList(list);
-		sendPacketObj.forwardPacket(list.getOriginalPacket(), cacheServerAddress);
-	}
+//	private static void advertise(ArrayList<String> contentList, String cacheServerAddress)
+//			throws UnknownHostException {
+//
+//		PrefixListObj list = new PrefixListObj(contentList, Peer.generateID(Peer.getIP(Peer.IP)) + "", true,
+//				Peer.generateID(Peer.getIP(Peer.IP)) + System.nanoTime() + "");
+//		// sendPacketObj.createPrefixListPacket(list);
+//		sendPacketObj.createClientPrefixList(list);
+//		sendPacketObj.forwardPacket(list.getOriginalPacket(), cacheServerAddress);
+//	}
 
 	private static void advertiseNewlyAdded(Content content, boolean addRemove) throws UnknownHostException {
-		logger.info("advertizing newly added content");
-		System.out.println("advertizing newly added content");
+		logger.info("advertizing newly added content "+addRemove);
 		// write code to advertize single prefixObj
 		PrefixObj list = new PrefixObj(content.getContentName(),
 				Peer.generateID(Peer.getIP(Peer.IP)) + System.nanoTime() + "",
 				Peer.generateID(Peer.getIP(Peer.IP)) + "", addRemove);
 		// sendPacketObj.createPrefixPacket(list);
-		sendPacketObj.createClientPrefix(list);
+		sendPacketObj.createPrefixPacket(list);
 		for (String e : Peer.mep.getDirectlyConnectedNodes().getDirectlyConnectedRouters().keySet()) {
 			sendPacketObj.forwardPacket(list.getOriginalPacket(), e);
 		}
@@ -331,9 +321,7 @@ public class ContentStore {
 				advertiseNewlyAdded(content, false);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
-				logger.error(e.getMessage());
-				System.out.println(e);
-
+				logger.error(e.getStackTrace());
 			}
 			return true;
 		} else {

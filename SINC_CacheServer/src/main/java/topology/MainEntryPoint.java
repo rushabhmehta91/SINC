@@ -248,8 +248,7 @@ public class MainEntryPoint implements Runnable{
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
 				// TODO Auto-generated catch block
 //				e.printStackTrace();
 			}

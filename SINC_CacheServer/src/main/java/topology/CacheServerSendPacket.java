@@ -325,16 +325,10 @@ public class CacheServerSendPacket extends SendPacket{
 	public void forwardPacket(Object packet, String nextHop){
 
 		// this will forward a packet to only the router specified
-		Message<Object> packetMessage = new Message<Object>(7, packet);
-		
+		Message<Object> packetMessage = new Message<Object>(7, packet);		
 		Peer.sendMessage(nextHop, packetMessage);
-		System.out.println("-------------------------------------------");
-		System.out.println("Forward packet next hop"+ nextHop);
-//		System.out.println("nextHop: " + nextHop);
-		logger.info("Forward packet next hop"+ nextHop);
-//		System.out.println("packet: " + packet);
-//		System.out.println("nextHop: " + nextHop);
-		System.out.println("-------------------------------------------");
+		logger.info("Forward packet next hop "+ nextHop);
+
 	}
 
 	/**
@@ -349,10 +343,6 @@ public class CacheServerSendPacket extends SendPacket{
 
 		Message<String> packetMessage = new Message<String>(7, packet);
 		Peer.sendMessageToAllBut("", packetMessage);
-		//		System.out.println("    -Broadcast-");
-		//		System.out.println("packet: " + packet);
-		//		System.out.println("-------------------------------------------");
-		//		System.out.println("");
 	}
 
 	/**

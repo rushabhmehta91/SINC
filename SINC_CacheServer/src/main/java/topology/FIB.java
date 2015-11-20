@@ -512,23 +512,12 @@ public class FIB{
 			addPrefixLengthHashMap(prefixLength);
 			addPrefixLengthBloomFilter(prefixLength);
 		}
-		for(int i =0; i<prefixLength;i++){
-			
-			System.out.println(i+": "+contentNameSplit[i]);
-		}
-
-		System.out.println("check point 3.1");
 		//does the hash map contain the prefix 
 		if(doesHashMapContainPrefix(prefixLength, prefix) == false){
-			System.out.println("check point 4.1");
-			System.out.println(advertiser);
 			//does the advertiser node exist in the graph, if not skip this advertiser
-			System.out.println(nodeRepo.HMdoesNodeExist(advertiser));
-			System.out.println(directlyConnectedNodes.doesDirectlyConnectedClientExist(advertiser));
 			if((nodeRepo.HMdoesNodeExist(advertiser) == true) || 
 					(directlyConnectedNodes.doesDirectlyConnectedClientExist(advertiser) ==true)){
 
-				System.out.println("in fib b4 add prefix");
 				//add the content name and an empty list of advertisers 
 				addPrefixToHashMap(prefixLength, prefix);
 
@@ -542,13 +531,11 @@ public class FIB{
 
 
 		}else{
-			System.out.println("check point 2");
 			//if the content name DOES EXIST the just add the new advertisers 
 
 			//does the advertiser node exist in the graph 
 			if((nodeRepo.HMdoesNodeExist(advertiser) == true )|| 
 					(directlyConnectedNodes.doesDirectlyConnectedClientExist(advertiser) ==true)){
-				System.out.println("check point 1");
 				//is the advertiser listed under the given prefix, -1 is returned if the advertiser does not exist
 				if( doesHashMapContainAdvertiser(prefixLength, prefix, advertiser) == -1){
 //					System.out.println("check point 0");

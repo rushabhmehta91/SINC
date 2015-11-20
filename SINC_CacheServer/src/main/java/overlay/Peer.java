@@ -75,8 +75,6 @@ public class Peer { // implements PeerInterface
 			}
 		}
 		logger.info("Server socket started at port 43125...");
-		System.out.println("Server socket started at port 43125...");
-
 		neighbors = new HashMap<String, SocketContainer>();
 		vacancies = new HashMap<String, Integer>();
 		allNodes = new HashSet<String>();
@@ -178,7 +176,6 @@ public class Peer { // implements PeerInterface
 					i = 0;
 				}
 				logger.info("Node joined in: " + (System.nanoTime() - startTime));
-				System.out.println("Node joined in: " + (System.nanoTime() - startTime));
 			}
 		}
 
@@ -353,13 +350,12 @@ public class Peer { // implements PeerInterface
 				System.out.println("clients+servers: " + clientServers);
 				break;
 			default:
-				System.out.println("default hit");
+				System.out.println("Wrong command");
 				break;
 			}
 
 		}
 		logger.info("program terminating");
-		System.out.println("program terminating");
 	}
 
 	// 1,000,000,000 nano time == 1 second
@@ -382,7 +378,6 @@ public class Peer { // implements PeerInterface
 		allNodes.add(peer);
 		allNodes.addAll(packet.allNodes);
 		logger.info("New allNodes: " + allNodes);
-		System.out.println("New allNodes: " + allNodes);
 
 	}
 
@@ -406,19 +401,16 @@ public class Peer { // implements PeerInterface
 		// send neighbors with new peer info
 		int i = 0;
 		logger.info("Total neighbors: " + neighbors.size());
-		System.out.println("Total neighbors: " + neighbors.size());
 		packet.doNotConnect = except;
 		Message<JoinPacket> m = new Message<JoinPacket>(type, packet);
 		for (Entry<String, SocketContainer> e : neighbors.entrySet()) {
 			if (!except.contains(e.getKey())) {
 				++i;
 				logger.info("Sending new neighbor update: " + e.getKey());
-				System.out.println("Sending new neighbor update: " + e.getKey());
 				e.getValue().oos.writeObject(m);
 			}
 		}
 		logger.info("Total neighbors notified: " + i);
-		System.out.println("Total neighbors notified: " + i);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -437,13 +429,10 @@ public class Peer { // implements PeerInterface
 		oos.writeObject(joinMessage);
 		oos.flush();
 		logger.info("Join message sent");
-		System.out.println("Join message sent");
 		logger.info("Waiting for acknowledgement");
-		System.out.println("Waiting for acknowledgement");
 		Message<JoinPacket> mAck = (Message) ois.readObject();
 		long joinStartFinish = System.currentTimeMillis();
 		logger.info("Acknowledgement type: " + mAck.type);
-		System.out.println("Acknowledgement type: " + mAck.type);
 
 		// start listening to connected peer for any future communication
 		CacheServerLink link = new CacheServerLink(peerSocket.getRemoteSocketAddress() + "", ois, 3);
@@ -457,9 +446,6 @@ public class Peer { // implements PeerInterface
 		logger.info(System.currentTimeMillis() + " sent to routing:: "
 				+ generateID(peerSocket.getRemoteSocketAddress().toString()) + " cost::"
 				+ (joinStartFinish - joinStartTime));
-		System.out.println(System.currentTimeMillis() + " sent to routing:: "
-				+ generateID(peerSocket.getRemoteSocketAddress().toString()) + " cost::"
-				+ (joinStartFinish - joinStartTime));
 		routing.addLink(generateID(peerSocket.getRemoteSocketAddress().toString()) + "",
 				(int) (joinStartFinish - joinStartTime));
 
@@ -470,7 +456,7 @@ public class Peer { // implements PeerInterface
 		if (vizualizeServer == null) {
 			// String defaultVS="127.0.0.1";
 			String defaultVS = "172.31.38.100";
-			System.out.println("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
+			logger.info("Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			// Scanner sc=new Scanner(System.in);
 			// String reply=sc.nextLine();
 			String reply = "y";
@@ -484,14 +470,11 @@ public class Peer { // implements PeerInterface
 		try {
 			vizualizeServerSocket = new Socket(vizualizeServer, 56732);
 			VisualizeMessage message = new VisualizeMessage(ID, 1, 2, nDetails);
-
 			ObjectOutputStream oos = new ObjectOutputStream(vizualizeServerSocket.getOutputStream());
-
 			oos.writeObject(message);
 			oos.flush();
 			oos.close();
 			logger.info("message sent");
-			System.out.println("message sent");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
@@ -506,22 +489,15 @@ public class Peer { // implements PeerInterface
 	 */
 	public static void updateMetaData(Message<JoinPacket> m) {
 		logger.info("** Updating meta data - start**");
-		System.out.println("** Updating meta data - start**");
 		JoinPacket packet = m.packet;
 		logger.info("Packet allNodes: " + packet.allNodes);
-		System.out.println("Packet allNodes: " + packet.allNodes);
 		logger.info("Packet neighbors: " + packet.neighbors);
-		System.out.println("Packet neighbors: " + packet.neighbors);
 		// allNodes.addAll(packet.allNodes);
 		// vacancies.putAll(packet.vacancies);
 		logger.info("After update");
-		System.out.println("After update");
 		logger.info("allNodes: " + allNodes);
-		System.out.println("allNodes: " + allNodes);
 		logger.info("neighbors: " + neighbors);
-		System.out.println("neighbors: " + neighbors);
 		logger.info("** Updating meta data - finish**");
-		System.out.println("** Updating meta data - finish**");
 	}
 
 	/**
@@ -690,12 +666,9 @@ public class Peer { // implements PeerInterface
 		int newNetworkSize = Peer.allNodes.size();
 		int presentNeighbors = Peer.neighbors.size();
 		logger.info("newNetworkSize: " + newNetworkSize);
-		System.out.println("newNetworkSize: " + newNetworkSize);
 		logger.info("presentNeighbors: " + presentNeighbors);
-		System.out.println("presentNeighbors: " + presentNeighbors);
 		int requiredNeighbors = (int) Math.ceil(Math.log(newNetworkSize) / Math.log(2));
 		logger.info("Neighbors present: " + presentNeighbors + "\nNeighbors required: " + requiredNeighbors);
-		System.out.println("Neighbors present: " + presentNeighbors + "\nNeighbors required: " + requiredNeighbors);
 		if (presentNeighbors > requiredNeighbors) {
 			return true;
 		} else {
@@ -710,10 +683,6 @@ public class Peer { // implements PeerInterface
 	public static boolean linksSatisfied() {
 		int linksPresent = neighbors.size();
 		int linksRequired = (int) Math.ceil(Math.log(allNodes.size()) / Math.log(2));
-		logger.info("linksPresent: " + linksPresent);
-		System.out.println("linksPresent: " + linksPresent);
-		logger.info("linksRequired: " + linksRequired);
-		System.out.println("linksRequired: " + linksRequired);
 		return linksPresent == linksRequired;
 	}
 
@@ -728,11 +697,8 @@ public class Peer { // implements PeerInterface
 
 	public void start() throws IOException {
 		logger.info("Starting node...");
-		System.out.println("Starting node...");
 		logger.info("IP: " + IP);
-		System.out.println("IP: " + IP);
 		logger.info("Waiting for client peer...");
-		System.out.println("Waiting for client peer...");
 		allNodes.add(getIP(IP));
 	}
 }

@@ -67,8 +67,8 @@ public class UpdateSwitch implements Runnable{
 			try {
 				process.addLink(addLinkObj);
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -78,8 +78,8 @@ public class UpdateSwitch implements Runnable{
 			try {
 				process.removeLink(removeLinkObj);
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -89,8 +89,8 @@ public class UpdateSwitch implements Runnable{
 			try {
 				process.modifyLink(modifyLinkObj);
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -102,8 +102,8 @@ public class UpdateSwitch implements Runnable{
 					process.modifyNode(modifyNodeObj,
 							genericPacketObj.getRecievedFromNode());
 				} catch (IOException e) {
-					logger.error(e.getMessage());
-					System.out.println(e);
+					logger.error(e.getStackTrace());
+					
 //					e.printStackTrace();
 				}
 			}else{
@@ -126,8 +126,8 @@ public class UpdateSwitch implements Runnable{
 								genericPacketObj.getRecievedFromNode());
 					}
 				} catch (IOException e) {
-					logger.error(e.getMessage());
-					System.out.println(e);
+					logger.error(e.getStackTrace());
+					
 //					e.printStackTrace();
 				}
 			}
@@ -148,8 +148,8 @@ public class UpdateSwitch implements Runnable{
 								genericPacketObj.getRecievedFromNode());
 					}
 				} catch (IOException e) {
-					logger.error(e.getMessage());
-					System.out.println(e);
+					logger.error(e.getStackTrace());
+					
 //					e.printStackTrace();
 				}
 			}
@@ -160,8 +160,8 @@ public class UpdateSwitch implements Runnable{
 			try {
 				process.addClientLink(addClienLlinkObj);
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -171,8 +171,8 @@ public class UpdateSwitch implements Runnable{
 			try {
 				process.removeClientLink(removeClientLinkObj);
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -191,8 +191,8 @@ public class UpdateSwitch implements Runnable{
 							genericPacketObj.getRecievedFromNode());
 				}
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -203,10 +203,6 @@ public class UpdateSwitch implements Runnable{
 			try {
 				if (addRemoveClientPrefixList == true) {
 					// add the packet
-					System.out.println("Displaying the prefix list: ");
-					ArrayList<String> x = clientPrefixListObj.getPrefixList();
-					for ( int i = 0 ; i < x.size() ; i++ )
-					    System.out.println(x.get(i));
 					process.addClientPrefixList(clientPrefixListObj,
 							genericPacketObj.getRecievedFromNode());
 				} else {
@@ -215,8 +211,8 @@ public class UpdateSwitch implements Runnable{
 							genericPacketObj.getRecievedFromNode());
 				}
 			} catch (IOException e) {
-				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.error(e.getStackTrace());
+				
 //				e.printStackTrace();
 			}
 			break;
@@ -238,8 +234,6 @@ public class UpdateSwitch implements Runnable{
 			break;
 
 		default :
-			logger.error("Error in UpdateSwitch - unrecognized packet: dropping packet");
-			System.out.println("Error in UpdateSwitch - unrecognized packet: dropping packet");
 			break;
 		}
 

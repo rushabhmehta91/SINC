@@ -52,7 +52,6 @@ public class CacheServerGenericParser extends GenericParser {
 				isJson = false;
 				DataObj dataObj = (DataObj) packetObj.getPacket();
 				type = dataObj.getType();
-				System.out.println("Satyajeet: " + dataObj.getData().getClass());
 			}catch(Exception e1){
 				type = "dropPacket";
 			}
@@ -68,8 +67,6 @@ public class CacheServerGenericParser extends GenericParser {
 			break;
 
 		default :
-			logger.error("Invalid packet type");
-			System.out.println("Invalid packet type");
 			break;
 
 		}
