@@ -41,7 +41,7 @@ public class CacheServerPacketQueue2 extends PacketQueue2{
 			updateQueue.put(genericPacketObj);
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage());
-			System.out.println(e);
+			logger.info(e);
 //			e.printStackTrace();
 		}
 	}
@@ -53,15 +53,15 @@ public class CacheServerPacketQueue2 extends PacketQueue2{
 	@SuppressWarnings("rawtypes")
 	public GenericPacketObj removeFromUpdateQueue(){
 		try {
-			//System.out.println("trying to remove from update queue");
-			//System.out.println(updateQueue.size());
+			//logger.info("trying to remove from update queue");
+			//logger.info(updateQueue.size());
 			GenericPacketObj gpo = updateQueue.take();
-			//System.out.println("packet taken from update queue");
+			//logger.info("packet taken from update queue");
 
 			return gpo;
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage());
-			System.out.println(e);
+			logger.info(e);
 //			e.printStackTrace();
 		}
 		return null;

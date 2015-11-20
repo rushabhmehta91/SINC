@@ -48,6 +48,7 @@ public class ContentStore {
 
 	public static ContentPacket serveRequest(String fileName) {
 		ContentPacket c;
+
 		byte[] bytesArr = null;
 		logger.info("Serving request: " + fileName);
 		if (storeList.contains(fileName)) {
@@ -255,29 +256,6 @@ public class ContentStore {
 			}
 		}
 		return false;
-
-		// if (!store.containsKey(receivedContent.getContentName())) {
-		// store.put(receivedContent.getContentName(), receivedContent);
-		// store.get(receivedContent.getContentName()).trail.add(recievedFromNode);
-		// logger.info("content placed");
-		// System.out.println("content placed");
-		// try {
-		// advertiseNewlyAdded(receivedContent, true);
-		// } catch (UnknownHostException e) {
-		// logger.error(e.getStackTrace());
-		// System.out.println(e);
-		//// e.printStackTrace();
-		// }
-		// return true;
-		// } else {
-		// if (store.replace(receivedContent.getContentName(), receivedContent)
-		// != null) {
-		// return true;
-		// } else {
-		// return false;
-		// }
-		// }
-
 	}
 
 //	private static void advertise(ArrayList<String> contentList, String cacheServerAddress)

@@ -36,7 +36,7 @@ public class Polling extends Thread {
 					}					
 				}
 			} catch (InterruptedException e) {
-				System.out.println("Exception in polling");
+				logger.info("Exception in polling");
 				logger.error("Exception in polling "+ e);
 				//e.printStackTrace();
 			}

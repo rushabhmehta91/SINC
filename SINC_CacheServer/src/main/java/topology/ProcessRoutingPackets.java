@@ -90,6 +90,7 @@ public class ProcessRoutingPackets {
 					
 				} catch (Exception e) {
 					logger.error(e.getStackTrace());
+
 				}
 				
 				ContentStore.sendDataObj(requestedContent, intrestObj.getOriginRouterName(), receivedFromNode, copyFlag);
@@ -204,6 +205,7 @@ public class ProcessRoutingPackets {
 			if (dataObj != null && dataObj.getCacheFlag() == 2) {
 				ContentStore.incomingContent(dataObj, recievedFromNode);
 				logger.info("Content with name " + dataObj.getContentName() + " is placed in cached");
+
 				dataObj.setCacheFlag((byte) 1);
 				dataObj.aadToPath(Peer.ID);
 				//sendPacket.createDataPacket(dataObj);
@@ -229,7 +231,6 @@ public class ProcessRoutingPackets {
 				//if requester is down ... set to 1 AND boolean is not set 
 				if((nodeRepo.HMdoesNodeExist(requesters.get(i)) == true)){
 
-					//forward the packet to each of the requester
 					dataObj.aadToPath(Peer.ID);
 					sendPacket.forwardPacket(dataObj, requesters.get(i));
 
@@ -394,5 +395,6 @@ public class ProcessRoutingPackets {
 	public void processPingReply(DataObj dataObj){
 		//print data portion of data obj
 		logger.info("ping response: " + dataObj.getData());
+
 	}
 }

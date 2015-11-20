@@ -52,6 +52,7 @@ public class CacheServerGenericParser extends GenericParser {
 				isJson = false;
 				DataObj dataObj = (DataObj) packetObj.getPacket();
 				type = dataObj.getType();
+
 			}catch(Exception e1){
 				type = "dropPacket";
 			}
@@ -111,7 +112,7 @@ public class CacheServerGenericParser extends GenericParser {
 
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 
 			break;
@@ -125,7 +126,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoRemoveLink);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -138,7 +139,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoModifyLink);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -151,7 +152,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoModifyNodeObj);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -164,7 +165,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoPrefixObj);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -177,7 +178,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoPrefixListObj);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -190,7 +191,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoAddClient);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -203,7 +204,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoRemoveClient);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -216,7 +217,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoClientPrefix);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -229,7 +230,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoClientPrefixList);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -242,7 +243,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoNeighborRequestObj);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -255,7 +256,7 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoPrefixResponse);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
@@ -268,13 +269,13 @@ public class CacheServerGenericParser extends GenericParser {
 				packetQueue2.addToUpdateQueue(gpoNeighborResponse);
 			}catch(Exception e){
 				logger.error(e.getMessage());
-				System.out.println(e);
+				logger.info(e);
 			}
 			break;
 
 		default :
 			logger.error("Invalid update packet action");
-			System.out.println("Invalid update packet action");
+			logger.info("Invalid update packet action");
 			break;
 
 		}

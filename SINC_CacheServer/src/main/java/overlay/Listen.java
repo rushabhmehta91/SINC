@@ -97,6 +97,7 @@ public class Listen extends Thread {
 						oos.writeObject(mReply);
 						oos.flush();
 						logger.info("Node dropped" + dropped);
+
 					} else {
 						// read initial message from neighbor
 						logger.info("No drops needed");
@@ -176,6 +177,7 @@ public class Listen extends Thread {
 		// Thread.sleep(100);
 		ois = new ObjectInputStream(Peer.peerSocket.getInputStream());
 		logger.info("OOS and OIS set up");
+
 	}
 
 }

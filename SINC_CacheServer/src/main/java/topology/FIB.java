@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import caching.ContentStore;
 import orestes.bloomfilter.CountingBloomFilter;
 import orestes.bloomfilter.FilterBuilder;
 
@@ -45,6 +49,7 @@ public class FIB{
 	PIT pit;
 
 	DirectlyConnectedNodes directlyConnectedNodes;
+	private static Logger logger = LogManager.getLogger(ContentStore.class);
 
 
 	/**
@@ -512,12 +517,12 @@ public class FIB{
 			addPrefixLengthHashMap(prefixLength);
 			addPrefixLengthBloomFilter(prefixLength);
 		}
+
 		//does the hash map contain the prefix 
 		if(doesHashMapContainPrefix(prefixLength, prefix) == false){
 			//does the advertiser node exist in the graph, if not skip this advertiser
 			if((nodeRepo.HMdoesNodeExist(advertiser) == true) || 
 					(directlyConnectedNodes.doesDirectlyConnectedClientExist(advertiser) ==true)){
-
 				//add the content name and an empty list of advertisers 
 				addPrefixToHashMap(prefixLength, prefix);
 
@@ -531,14 +536,16 @@ public class FIB{
 
 
 		}else{
+
 			//if the content name DOES EXIST the just add the new advertisers 
 
 			//does the advertiser node exist in the graph 
 			if((nodeRepo.HMdoesNodeExist(advertiser) == true )|| 
 					(directlyConnectedNodes.doesDirectlyConnectedClientExist(advertiser) ==true)){
+
 				//is the advertiser listed under the given prefix, -1 is returned if the advertiser does not exist
 				if( doesHashMapContainAdvertiser(prefixLength, prefix, advertiser) == -1){
-//					System.out.println("check point 0");
+//					logger.info("check point 0");
 					////add the prefix to the Counting BLoom Filter 
 					//addPrefixToBloomFilter(prefixLength, prefix);
 

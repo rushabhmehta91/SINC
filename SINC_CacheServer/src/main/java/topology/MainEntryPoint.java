@@ -53,7 +53,7 @@ public class MainEntryPoint implements Runnable{
 	 * @param fibSleepTime
 	 */
 	public MainEntryPoint(String thisMachinesName, int pitSleepTime, long pitKeepMsgTime, int msgIDSleepTime, long msgIDKeepMsgTime, int fibSleepTime) {
-		//System.out.println("MainEntryPoint constructor called...");
+		//logger.info("MainEntryPoint constructor called...");
 		this.thisMachinesName = thisMachinesName;
 		this.pitSleepTime = pitSleepTime;
 		this.pitKeepMsgTime = pitKeepMsgTime;
@@ -137,29 +137,29 @@ public class MainEntryPoint implements Runnable{
 	public void printNodeRepo(){
 		ArrayList<Node> graph = nodeRepo.getGraphList();
 		for(Node node : graph){
-			System.out.println("Node: " + node.getName());
+			logger.info("Node: " + node.getName());
 		}
 	}
 	public void printNodeDetails(String nodeName){
 		Node node = nodeRepo.HMgetNode(nodeName);
-		System.out.println("Node Name: " + node.getName());
-		System.out.println("Node Best Cost: " + node.getBestCost());
-		System.out.println("Node Origin Next Hop: " + node.getOriginNextHop());
+		logger.info("Node Name: " + node.getName());
+		logger.info("Node Best Cost: " + node.getBestCost());
+		logger.info("Node Origin Next Hop: " + node.getOriginNextHop());
 		ArrayList<NeighborAndCostStrings> neighbors = node.getNeighbors();
 		for(NeighborAndCostStrings neighbor : neighbors){
-			System.out.println("Neighbor: " + neighbor);
+			logger.info("Neighbor: " + neighbor);
 		}
 	}
 	public void printFIB(){
 		ArrayList<String> entries = fib.getFIBEntries();
 		for(String entry : entries){
-			System.out.println("FIB entry: " + entry);
+			logger.info("FIB entry: " + entry);
 		}
 	}
 	public void printPIT(){
 		ArrayList<String> entries = pit.getPitNamesAndEntries();
 		for(String entry : entries){
-			System.out.println("PIT entry: " + entry);
+			logger.info("PIT entry: " + entry);
 		}
 	}
 	public String printDirectlyConnectedRouters(){
@@ -181,7 +181,7 @@ public class MainEntryPoint implements Runnable{
 	public void printMsgIDsSeen(){
 		ArrayList<String> entries = updateMsgsSeen.getMsgIDsAndTimes();
 		for(String entry : entries){
-			System.out.println("MsgID: " + entry);
+			logger.info("MsgID: " + entry);
 		}
 	}
 
@@ -191,7 +191,7 @@ public class MainEntryPoint implements Runnable{
 		sendPacket.createIntrestPacket(intrestObj1);
 		PacketObj packetObj1 = new PacketObj(intrestObj1.getOriginalPacket(), "53830144", false);
 		packetQueue2.addToGeneralQueue(packetObj1);
-		//System.out.println("added to general q");
+		//logger.info("added to general q");
 	}
 
 	public void dataPacket(String contentName, String originRouter, String fromNode){
@@ -233,7 +233,7 @@ public class MainEntryPoint implements Runnable{
 		sendPacket.createIntrestPacket(intrestObj1);
 		PacketObj packetObj1 = new PacketObj(intrestObj1.getOriginalPacket(), nodeRepo.getThisMachinesName(), false);
 		packetQueue2.addToGeneralQueue(packetObj1);
-		//System.out.println("added to general q");
+		//logger.info("added to general q");
 	}
 
 	public void autoPing(String nodeID, int pingCount){
@@ -258,7 +258,7 @@ public class MainEntryPoint implements Runnable{
 	public void convergenceTime(){
 		int nodeCounter = nodeRepo.nodeCounter;
 		for(int i = 1; i <= nodeCounter; i++){
-			System.out.println("Node: " + i + " time:"+ (nodeRepo.convergenceHM.get(i) - nodeRepo.convergenceHM.get(1)) );
+			logger.info("Node: " + i + " time:"+ (nodeRepo.convergenceHM.get(i) - nodeRepo.convergenceHM.get(1)) );
 		}
 	}
 

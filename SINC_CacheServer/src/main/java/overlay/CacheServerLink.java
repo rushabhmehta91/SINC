@@ -38,7 +38,7 @@ public class CacheServerLink extends Link {
 				m = (Message) ois.readObject();
 				// System.out.print(System.currentTimeMillis()
 				// + "Message received from: " + connectedTo);
-				// System.out.println("\tMessage type: " + m.type);
+				// logger.info("\tMessage type: " + m.type);
 				attempt = 0;
 				// handle updates if not previously seen
 				if (!Peer.requests.contains(m.requestNo)) {
@@ -52,18 +52,14 @@ public class CacheServerLink extends Link {
 				}
 			} catch (ClassNotFoundException e) {
 				logger.error(e.getStackTrace());
-//				e.printStackTrace();
-				// running = false;
 			} catch (IOException e) {
 				attempt++;
-//				logger.error(e.getStackTrace());
-//				e.printStackTrace();
 				if (attempt == 3) {
 					try {
 						ois.close();
 						// broadcast force remove
 					} catch (IOException e1) {
-						logger.error(e.getStackTrace());
+						logger.error(e1.getStackTrace());
 //						e1.printStackTrace();
 					}
 					running = false;
@@ -83,6 +79,7 @@ public class CacheServerLink extends Link {
 						} catch (IOException e) {
 							logger.error("Error when closing "
 									+ "client or server socket" + e.getStackTrace());
+
 //							e.printStackTrace();
 						}
 						Peer.clientServers.remove(ID);
@@ -91,6 +88,7 @@ public class CacheServerLink extends Link {
 						try {
 							Peer.neighbors.remove(connectedTo).socket.close();
 						} catch (IOException e) {
+
 							logger.error("Error when closing "
 									+ "cache server socket "+e.getStackTrace());
 //							e.printStackTrace();
@@ -111,6 +109,7 @@ public class CacheServerLink extends Link {
 			}
 		}
 		logger.warn("Link to " + connectedTo + " dropped...");
+
 	}
 
 	public void handleUpdate(Message m) throws IOException,
@@ -123,6 +122,7 @@ public class CacheServerLink extends Link {
 			Peer.neighbors.remove(connectedTo);
 			Peer.routing.removeLink(Peer.generateID(connectedTo) + "", 0);
 			logger.warn("Removed " + connectedTo + " as neighbor");
+
 		}
 		// poll packet
 		else if (m.type == 100) {
@@ -187,6 +187,7 @@ public class CacheServerLink extends Link {
 						+ m.packet.getClass());
 				logger.error("inside message of type 7: "
 						+ ((Message) m.packet).packet);
+
 			}
 		}
 		// force remove dropped neighbor

@@ -36,7 +36,6 @@ public class CacheServerPassToRoutingLayer extends PassToRoutingLayer{
 	 */
 	public void addLink(String nodeName, int nodeCost){
 		logger.info("New link to: " + nodeName);
-		//System.out.println("creating add link obj");
 		//make the obj
 		LinkObj addlinkObj = new LinkObj(nodeName, nodeCost);
 		//create json

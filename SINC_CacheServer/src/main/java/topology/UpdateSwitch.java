@@ -68,7 +68,6 @@ public class UpdateSwitch implements Runnable{
 				process.addLink(addLinkObj);
 			} catch (IOException e) {
 				logger.error(e.getStackTrace());
-				
 //				e.printStackTrace();
 			}
 			break;
@@ -79,7 +78,6 @@ public class UpdateSwitch implements Runnable{
 				process.removeLink(removeLinkObj);
 			} catch (IOException e) {
 				logger.error(e.getStackTrace());
-				
 //				e.printStackTrace();
 			}
 			break;
@@ -90,7 +88,6 @@ public class UpdateSwitch implements Runnable{
 				process.modifyLink(modifyLinkObj);
 			} catch (IOException e) {
 				logger.error(e.getStackTrace());
-				
 //				e.printStackTrace();
 			}
 			break;
@@ -103,7 +100,6 @@ public class UpdateSwitch implements Runnable{
 							genericPacketObj.getRecievedFromNode());
 				} catch (IOException e) {
 					logger.error(e.getStackTrace());
-					
 //					e.printStackTrace();
 				}
 			}else{
@@ -127,7 +123,6 @@ public class UpdateSwitch implements Runnable{
 					}
 				} catch (IOException e) {
 					logger.error(e.getStackTrace());
-					
 //					e.printStackTrace();
 				}
 			}
@@ -161,7 +156,6 @@ public class UpdateSwitch implements Runnable{
 				process.addClientLink(addClienLlinkObj);
 			} catch (IOException e) {
 				logger.error(e.getStackTrace());
-				
 //				e.printStackTrace();
 			}
 			break;
@@ -172,7 +166,7 @@ public class UpdateSwitch implements Runnable{
 				process.removeClientLink(removeClientLinkObj);
 			} catch (IOException e) {
 				logger.error(e.getStackTrace());
-				
+
 //				e.printStackTrace();
 			}
 			break;
@@ -192,7 +186,7 @@ public class UpdateSwitch implements Runnable{
 				}
 			} catch (IOException e) {
 				logger.error(e.getStackTrace());
-				
+
 //				e.printStackTrace();
 			}
 			break;
