@@ -83,7 +83,7 @@ public class ProcessRoutingPackets {
 					ContentStore.updateScoreOnIterface(requestedContent.getContent(), receivedFromNode);
 					if (ContentStore.shouldCopy(requestedContent.getContent(), receivedFromNode)) {
 						copyFlag = true;
-						if (ContentStore.shouldDelete(requestedContent.getContent())) {
+						if (ContentStore.shouldDelete(requestedContent.getContent(), receivedFromNode)) {
 							deleteFlag = true;
 						}
 					}
@@ -207,7 +207,6 @@ public class ProcessRoutingPackets {
 				logger.info("Content with name " + dataObj.getContentName() + " is placed in cached");
 
 				dataObj.setCacheFlag((byte) 1);
-				dataObj.aadToPath(Peer.ID);
 				//sendPacket.createDataPacket(dataObj);
 
 			}

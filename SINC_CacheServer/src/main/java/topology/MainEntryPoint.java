@@ -166,7 +166,7 @@ public class MainEntryPoint implements Runnable{
 		String[] routers = getDirectlyConnectedNodes().getDirectlyConnectedRoutersList();
 		String returnString="";
 		for(String router : routers){
-			returnString+=router+", ";
+			returnString+=router+",";
 		}
 		return returnString;
 	}
@@ -174,7 +174,7 @@ public class MainEntryPoint implements Runnable{
 		ArrayList<String> entries = getDirectlyConnectedNodes().getClientEntries();
 		String returnString="";
 		for(String entry : entries){
-			returnString+=entry+", ";
+			returnString+=entry+",";
 		}
 		return returnString;
 	}

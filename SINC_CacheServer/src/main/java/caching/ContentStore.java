@@ -129,11 +129,13 @@ public class ContentStore {
 		return copyFlag;
 	}
 
-	public static boolean shouldDelete(Content contentStoreCopy) {
+	public static boolean shouldDelete(Content contentStoreCopy, String interfaceId) {
 		boolean deleteFlag = true;
 		for (String index : contentStoreCopy.listofScoreOnInterfaces.keySet()) {
-			if (contentStoreCopy.listofScoreOnInterfaces.get(index) < contentStoreCopy.getMaxNScore() / 2) {
-				deleteFlag = false;
+			if(!index.equals(interfaceId)){
+				if (contentStoreCopy.listofScoreOnInterfaces.get(index) < contentStoreCopy.getMaxNScore() / 2) {
+					deleteFlag = false;
+				}
 			}
 		}
 		return deleteFlag;
@@ -292,9 +294,13 @@ public class ContentStore {
 	 * @return
 	 */
 	public static boolean deleteContent(Content content) {
+		logger.info("In delete method");
 		if (store.remove(content.getContentName()) != null) {
+			
 			File f = new File("cache/" + content.getContentName());
 			f.delete();
+			logger.info("Deleting file");
+			storeList.remove(content.getContentName());
 			try {
 				advertiseNewlyAdded(content, false);
 			} catch (UnknownHostException e) {

@@ -40,10 +40,9 @@ public class Server implements Serializable  {
 	public static HashMap<String, Content> store;
 	public static ArrayList<String> storeList;
 	public static ServerSendPacket sendPacketObj;
-	public static String ID;
-	public static String IP;
 	static HashMap<String, String> idIPMap = new HashMap<String, String>();
-	public static String serverNameID;
+	public static String serverIP;
+	public static String serverID;
 	public static GeneralQueueHandler gqh;
 	public static PacketQueue2 pq2;
 	public static ProcessData pd;
@@ -68,8 +67,8 @@ public class Server implements Serializable  {
 
 	public static void main(String args[]) {
 		try {
-			serverNameID = InetAddress.getLocalHost().getHostAddress();
-			ID=generateID(getIP(serverNameID))+"";
+			serverIP = InetAddress.getLocalHost().getHostAddress();
+			serverID=generateID(getIP(serverIP))+"";
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -146,11 +145,9 @@ public class Server implements Serializable  {
 	 */
 	public static boolean sendMessage(String ID, Message m) {
 		try {
-			logger.info("IP: " + IP);
+			logger.info("IP: " + cacheServerAddress);
 			logger.info("isConnected: " + isConnected);
-			System.out.println("IP: " + IP);
-			System.out.println("isConnected: " + isConnected);
-			SocketContainer sc = isConnected.get(IP);
+			SocketContainer sc = isConnected.get(cacheServerAddress);
 			sc.oos.writeObject(m);
 		} catch (IOException e) {
 			return false;
@@ -244,7 +241,7 @@ public class Server implements Serializable  {
 			copyFlagValue = (byte) 1;
 		}
 		ArrayList<String> path=new ArrayList<>();
-		path.add(ID);
+		path.add(serverID);
 		// System.out.println(convertContentToString(sendingContent));
 		DataObj dataObj = new DataObj(sendingContent.getContent().getContentName(), originRouter, (byte) 0, sendingContent, path, copyFlagValue, true);
 //		sendPacketObj.createDataPacket(dataObj);
@@ -416,7 +413,7 @@ public class Server implements Serializable  {
 			    	  contentName = listOfFiles[i].getName();
 			    	  contentSize = listOfFiles[i].length();
 			    	  ArrayList<String> trail=new ArrayList<String>();
-			    	  trail.add(ID);
+			    	  trail.add(serverID);
 			    	  Content c = new Content(contentName, trail, contentSize);
 			    	  addContentToStore(c);
 			      } 
@@ -444,8 +441,8 @@ public class Server implements Serializable  {
 	private static void advertise(ArrayList<String> contentList, String cacheServerAddress)
 			throws UnknownHostException {
 
-		PrefixListObj list = new PrefixListObj(contentList, generateID(getIP(serverNameID)) + "", true,
-				generateID(getIP(serverNameID)) + System.nanoTime() + "");
+		PrefixListObj list = new PrefixListObj(contentList, generateID(getIP(serverIP)) + "", true,
+				generateID(getIP(serverIP)) + System.nanoTime() + "");
 		// sendPacketObj.createPrefixListPacket(list);
 		System.out.println("Advertising prefix List: ");
 		list.displayPrefixList();
@@ -507,7 +504,7 @@ public class Server implements Serializable  {
 
 		});
 		if (nDetails == null) {
-			nDetails = new NodeDetails(ID, idIPMap.get(ID), cacheServerID, 1,"");
+			nDetails = new NodeDetails(serverID, idIPMap.get(serverID), cacheServerID, 1,"");
 		}
 
 		B.start();
@@ -520,11 +517,10 @@ public class Server implements Serializable  {
 					if (csIP == null) {
 						System.out.print("Enter cache server to connect to: ");
 						cacheServerAddress = sc.nextLine();
-						cacheServerID=generateID(getIP(serverNameID))+"";
+						cacheServerID=generateID(getIP(cacheServerAddress))+"";
 					} else {
 						cacheServerAddress = csIP;
 					}
-					IP = cacheServerAddress;
 					
 					Socket cacheServer = null;
 					try {
@@ -548,8 +544,6 @@ public class Server implements Serializable  {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					ID = generateID(getIP(cacheServerAddress)) + "";
 					connected = true;
 					// oos.writeObject("joining client");
 					isConnected.put(cacheServerAddress, new SocketContainer(cacheServer, ois, oos, link));
@@ -588,7 +582,7 @@ public class Server implements Serializable  {
 		}
 		try {
 			vizualizeServerSocket = new Socket(vizualizeServer, 56732);
-			VisualizeMessage message = new VisualizeMessage(ID, 1, 1, nDetails);
+			VisualizeMessage message = new VisualizeMessage(serverID, 1, 1, nDetails);
 
 			ObjectOutputStream oos = new ObjectOutputStream(vizualizeServerSocket.getOutputStream());
 
@@ -605,7 +599,7 @@ public class Server implements Serializable  {
 	private static void advertiseNewlyAdded(Content content) throws UnknownHostException {
 		// write code to advertize single prefixObj
 		PrefixObj list = new PrefixObj(content.getContentName(),
-				generateID(getIP(serverNameID)) + System.nanoTime() + "", generateID(getIP(serverNameID)) + "", true);
+				generateID(getIP(serverIP)) + System.nanoTime() + "", generateID(getIP(serverIP)) + "", true);
 		// sendPacketObj.createPrefixPacket(list);
 		sendPacketObj.createClientPrefix(list);
 		for (String e : listOfConnection.keySet()) {

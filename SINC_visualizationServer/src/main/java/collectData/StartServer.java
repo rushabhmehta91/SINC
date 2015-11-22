@@ -93,6 +93,7 @@ public class StartServer {
 		//System.out.println("change flag true");
 		if (!nodes.isEmpty() && nodes.containsKey(n1.getId())) {
 			nodes.get(n1.getId()).setNeighbours(n1.getNeighbours());
+			nodes.get(n1.getId()).setContentStore(n1.getContentStore());
 		} else {
 			nodes.put(n1.getId(), n1);
 		}
@@ -137,7 +138,7 @@ public class StartServer {
 			JSONObject node=new JSONObject();
 			node.put("id",nodes.get(ID).getId());
 			node.put("ip", nodes.get(ID).getIp());
-			node.put("neighbours",nodes.get(ID).getNeighbours());
+			node.put("neighbours",nodes.get(ID).getNeighbours().replace(ID+",", ""));
 			node.put("contentStore", nodes.get(ID).getContentStore());
 			if(nodes.get(ID).getMachineType()==2){
 				node.put("color", "#666");
@@ -166,13 +167,15 @@ public class StartServer {
 				neighbourList[0]=nodes.get(ID).getNeighbours();
 			}
 			for(int index=0;index<neighbourList.length;index++){
-				if(!ID.equals(neighbourList[index]) && !edgeIDList.contains(neighbourList[index]+"-"+ID)){
-					JSONObject edge=new JSONObject();
-					edgeIDList.add(ID+"-"+neighbourList[index]);
-					edge.put("id", ID+"-"+neighbourList[index]);
-					edge.put("source", ID);
-					edge.put("target", neighbourList[index]);
-					edgeList.add(edge);
+				if(ID!=null || !ID.equals("")){
+					if(!ID.equals(neighbourList[index]) && !edgeIDList.contains(neighbourList[index]+"-"+ID)){
+						JSONObject edge=new JSONObject();
+						edgeIDList.add(ID+"-"+neighbourList[index]);
+						edge.put("id", ID+"-"+neighbourList[index]);
+						edge.put("source", ID);
+						edge.put("target", neighbourList[index]);
+						edgeList.add(edge);
+					}
 				}
 			}
 		}

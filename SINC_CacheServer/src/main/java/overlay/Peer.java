@@ -211,7 +211,7 @@ public class Peer { // implements PeerInterface
 					}
 					String currentNeigh = mep.printDirectlyConnectedRouters() + mep.printDirectlyConnectedClietns();
 					String oldNeigh = nDetails.getNeighbours();
-					String currentPrefix = ContentStore.store.keySet().toString();
+					String currentPrefix = ContentStore.storeList.toString();
 					String oldPrefix = nDetails.getContentStore();
 
 					if (!currentNeigh.equals(oldNeigh) || !currentPrefix.equals(oldPrefix)) {
