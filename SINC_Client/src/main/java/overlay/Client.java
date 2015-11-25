@@ -107,8 +107,7 @@ public class Client {
 					connected = true;
 					// oos.writeObject("joining client");
 				} catch (UnknownHostException e) {
-					logger.error("Connection error.. Please try again.." + e);
-					System.out.println("Connection error.. Please try again..");
+					logger.error("Connection error.. Please try again.." + e.getStackTrace());
 				}
 			}
 			
@@ -119,11 +118,23 @@ public class Client {
 //            if (noReqContent == 0) {
                 while (true) {
                     String msg = sc.nextLine();
-                    System.out.println("Requesting: " + msg);
-                    IntrestObj intrst = new IntrestObj(msg, "", 1);
-                    sendPacketObj.createIntrestPacket(intrst);
-                    sendPacketObj.forwardPacket(intrst.getOriginalPacket());
-                    rtt.put(msg, System.currentTimeMillis());
+                    int x = Integer.parseInt(msg);
+                    msg="test.txt";
+                    for(int index = 0; index<x;index++){
+                    	try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                    	logger.info("Request number: "+index);
+	                    logger.info("Requesting: " + msg);
+	                    IntrestObj intrst = new IntrestObj(msg, "", 1);
+	                    sendPacketObj.createIntrestPacket(intrst);
+	                    sendPacketObj.forwardPacket(intrst.getOriginalPacket());
+	                    rtt.put(msg, System.currentTimeMillis());
+	                    
+                    }
 //                    noReqContent++;
 //                }
             }
@@ -142,7 +153,7 @@ public class Client {
 		if (vizualizeServer == null) {
 
 			String defaultVS = "172.31.38.100";
-			System.out.println(
+			logger.info(
 					"Vizualiztion server not set...Enter y or yes to set it to default i.e. " + defaultVS);
 			//Scanner sc = new Scanner(System.in);
 			//String reply = sc.nextLine();

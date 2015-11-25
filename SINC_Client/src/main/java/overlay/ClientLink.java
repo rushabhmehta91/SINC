@@ -32,18 +32,12 @@ public class ClientLink extends Link {
 		Message m = null;
 		int attempt = 0;
 		logger.info("Started listening on link to " + connectedTo);
-		System.out.println("Started listening on link to " + connectedTo);
 		while (running) {
 			try {
 				m = (Message) ois.readObject();
-				logger.info(System.currentTimeMillis()
-						+ "Message received from: " + connectedTo);
-				System.out.println(System.currentTimeMillis()
-						+ "Message received from: " + connectedTo);
+				logger.info("Message received from: " + connectedTo);
 				logger.info("Message type: " + m.type);
-				System.out.println("Message type: " + m.type);
 				logger.info("Request no: " + m.requestNo);
-				System.out.println("Request no: " + m.requestNo);
 				attempt = 0;
 				// handle updates if not previously seen
 				handleUpdate(m);
@@ -65,7 +59,6 @@ public class ClientLink extends Link {
 			}
 		}
 		logger.error("Link to " + connectedTo + " dropped...");
-		System.out.println("Link to " + connectedTo + " dropped...");
 	}
 
 	public void handleUpdate(Message m) throws IOException,

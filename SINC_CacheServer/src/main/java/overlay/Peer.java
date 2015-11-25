@@ -360,7 +360,7 @@ public class Peer { // implements PeerInterface
 
 	// 1,000,000,000 nano time == 1 second
 	public static MainEntryPoint startRouting() {
-		MainEntryPoint mep = new MainEntryPoint(ID + "", 10000, 7000000000L, 20000, 60000000000L, 20000);
+		MainEntryPoint mep = new MainEntryPoint(ID + "", 5000, 7000000000L, 20000, 60000000000L, 20000);
 		routing = new CacheServerPassToRoutingLayer(mep.packetQueue2);
 
 		return mep;

@@ -223,18 +223,18 @@ public class ProcessRoutingPackets {
 			//			}
 
 			boolean alternativePathUsed = false;
+			dataObj.aadToPath(Peer.ID);
 			for(int i = 0; i < requesters.size(); i++){
 
 				//requesters are always directly connected
 				//does the requester (next hop node) exist 
 				//if requester is down ... set to 1 AND boolean is not set 
 				if((nodeRepo.HMdoesNodeExist(requesters.get(i)) == true)){
-
-					dataObj.aadToPath(Peer.ID);
+					System.out.println("here");
 					sendPacket.forwardPacket(dataObj, requesters.get(i));
-
+					System.out.println("going to remove now...........");
+					pit.removeRequester(dataObj.getContentName(), requesters.get(i));
 				}else{
-
 					//if the original server is not equal to this routers name, try to forward the packet
 					if( !nodeRepo.getThisMachinesName().equals(dataObj.getOriginRouterName()) ){
 
@@ -253,9 +253,9 @@ public class ProcessRoutingPackets {
 				if(directlyConnectedNodes.doesDirectlyConnectedClientExist(clientRequesters.get(i)) == true){
 
 					//forward the packet to each of the client requesters
-					dataObj.aadToPath(Peer.ID);
+					
 					sendPacket.forwardPacket(dataObj, clientRequesters.get(i));
-
+					pit.removeCLientRequester(dataObj.getContentName(), clientRequesters.get(i));
 				}
 			}
 		}else{

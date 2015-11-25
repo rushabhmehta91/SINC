@@ -19,7 +19,6 @@ public class ProcessData extends Thread {
 	public ProcessData(ConcurrentHashMap<String, Long> rtt) {
 		this.rtt = rtt;
 		logger.info("client process data constructer:");
-		System.out.println("client process data constructer:");
 	}
 
 	@Override
@@ -28,7 +27,6 @@ public class ProcessData extends Thread {
 			GenericPacketObj<DataObj> gpo = Client.pq2.removeFromRoutingQueue();
 			DataObj dataObj = null;
 			logger.info("client process data action: " + gpo.getAction());
-			System.out.println("client process data action: " + gpo.getAction());
 			switch (gpo.getAction()) {
 			case "data":
 				dataObj = (DataObj) gpo.getObj();
@@ -53,7 +51,7 @@ public class ProcessData extends Thread {
 			try {
 				cp = (ContentPacket) dataObj.getData();
 			    dataBytes =  (byte[]) cp.getData();
-			    System.out.println("writing content file!!");
+			    logger.info("writing content file!!");
 			    File f = new File(contentName);
 			    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
 			    bos.write(dataBytes);
@@ -65,12 +63,11 @@ public class ProcessData extends Thread {
 
 		//used for rtt, can be removed
 		if(rtt.containsKey(contentName) == true){
+			logger.info("Content name: " + contentName);
 			logger.info("rtt mili seconds: " + (System.currentTimeMillis() - rtt.get(contentName)));
 			logger.info("Path: " + dataObj.getPath().toString());
-			System.out.println("rtt mili seconds: " + (System.currentTimeMillis() - rtt.get(contentName)) );
-			System.out.println("Path: " + dataObj.getPath().toString());
+			logger.info("Hope: "+dataObj.getPath().size());
 		}
-		logger.info("Content name: " + contentName);
-		System.out.println("Content name: " + contentName);
+		
 	}
 }

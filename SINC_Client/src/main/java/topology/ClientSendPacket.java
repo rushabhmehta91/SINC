@@ -31,10 +31,6 @@ public class ClientSendPacket extends SendPacket{
 		logger.info("-------------------------------------------");
 		logger.info("    -Forward packet next hop provided-");
 		logger.info("-------------------------------------------");
-		System.out.println("-------------------------------------------");
-		System.out.println("    -Forward packet next hop provided-");
-//		System.out.println("packet: " + packet);
-		System.out.println("-------------------------------------------");
-		System.out.println("");
+		
 	}
 }

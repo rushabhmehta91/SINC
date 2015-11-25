@@ -96,7 +96,12 @@ public class PITEntry {
 	public void removeRequester(String requester){
 		int index = doesRequesterExist(requester);
 		if(index != -1){
+			System.out.println(requesters.toString());
+			System.out.println();
+			System.out.println("remoivng PIT entry: " + requester);
+System.out.println();
 			requesters.remove(index);
+			System.out.println(requesters.toString());
 		}
 
 	}

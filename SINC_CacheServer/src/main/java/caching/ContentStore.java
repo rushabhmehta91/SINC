@@ -131,6 +131,7 @@ public class ContentStore {
 
 	public static boolean shouldDelete(Content contentStoreCopy, String interfaceId) {
 		boolean deleteFlag = true;
+		logger.info("shouldDelete");
 		for (String index : contentStoreCopy.listofScoreOnInterfaces.keySet()) {
 			if(!index.equals(interfaceId)){
 				if (contentStoreCopy.listofScoreOnInterfaces.get(index) < contentStoreCopy.getMaxNScore() / 2) {
@@ -138,6 +139,7 @@ public class ContentStore {
 				}
 			}
 		}
+		logger.info("shouldDelete: "+ deleteFlag);
 		return deleteFlag;
 	}
 
