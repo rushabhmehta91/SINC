@@ -80,14 +80,15 @@ public class ProcessRoutingPackets {
 			ContentPacket requestedContent = ContentStore.serveRequest(contentName);
 			if (requestedContent != null) {
 				try {
-					ContentStore.updateScoreOnIterface(requestedContent.getContent(), receivedFromNode);
-					if (ContentStore.shouldCopy(requestedContent.getContent(), receivedFromNode)) {
-						copyFlag = true;
-						if (ContentStore.shouldDelete(requestedContent.getContent(), receivedFromNode)) {
-							deleteFlag = true;
+					if(directlyConnectedNodes.doesDirectlyConnectedRouterExist(receivedFromNode)){
+						ContentStore.updateScoreOnIterface(requestedContent.getContent(), receivedFromNode);
+						if (ContentStore.shouldCopy(requestedContent.getContent(), receivedFromNode)) {
+							copyFlag = true;
+							if (ContentStore.shouldDelete(requestedContent.getContent(), receivedFromNode)) {
+								deleteFlag = true;
+							}
 						}
 					}
-					
 				} catch (Exception e) {
 					logger.error(e.getStackTrace());
 
@@ -230,9 +231,7 @@ public class ProcessRoutingPackets {
 				//does the requester (next hop node) exist 
 				//if requester is down ... set to 1 AND boolean is not set 
 				if((nodeRepo.HMdoesNodeExist(requesters.get(i)) == true)){
-					System.out.println("here");
 					sendPacket.forwardPacket(dataObj, requesters.get(i));
-					System.out.println("going to remove now...........");
 					pit.removeRequester(dataObj.getContentName(), requesters.get(i));
 				}else{
 					//if the original server is not equal to this routers name, try to forward the packet
@@ -253,11 +252,11 @@ public class ProcessRoutingPackets {
 				if(directlyConnectedNodes.doesDirectlyConnectedClientExist(clientRequesters.get(i)) == true){
 
 					//forward the packet to each of the client requesters
-					
 					sendPacket.forwardPacket(dataObj, clientRequesters.get(i));
 					pit.removeCLientRequester(dataObj.getContentName(), clientRequesters.get(i));
 				}
 			}
+			pit.removeEntry(dataObj.getContentName());
 		}else{
 			//if no pit entry exists ... drop the packet
 			return;
